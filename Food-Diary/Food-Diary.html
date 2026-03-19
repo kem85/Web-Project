@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fitness Tracker VY</title>
+
+    <link rel="stylesheet" href="Food-Diary.css" />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+
+    <header class="header">
+      <div class="logo">
+        <h1><a href="index.html">myfitnesspal</a></h1>
+      </div>
+
+      <div class="user-section">
+        <span>Hi <span id="username">User</span></span>
+
+        <a href="#">Help</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+      </div>
+    </header>
+
+    <!-- NAVBAR -->
+
+   <nav class="navbar">
+
+            <ul>
+                <li><a href="index.html">My Home</a></li>
+                <li><a href="Check-In.html">Check in</a></li>
+                <li><a href="Food-Diary.html">Food Diary</a></li>
+                <li><a href="Charts.html">Charts</a></li>
+                <li><a href="Profile.html">Profile</a></li>
+            </ul>
+        </nav>
+
+    <main class="diary-container">
+      <header class="diary-header">
+        <span>Your Food Diary For:</span>
+        <div class="date-controls">
+          <button>&lt;</button>
+          <span class="current-date">Wednesday, March 11, 2026</span>
+          <button>&gt;</button>
+          <i class="calendar-icon">📅</i>
+        </div>
+      </header>
+
+      <table class="dashboard">
+        <thead>
+          <tr>
+            <th class="meal-col">Breakfast</th>
+            <th>
+              Calories <br />
+              <small>kcal</small>
+            </th>
+            <th>
+              Carbs <br />
+              <small>g</small>
+            </th>
+            <th>
+              Fat <br />
+              <small>g</small>
+            </th>
+            <th>
+              Protein <br />
+              <small>g</small>
+            </th>
+            <th>
+              Sodium <br />
+              <small>mg</small>
+            </th>
+            <th>
+              Sugar <br />
+              <small>g</small>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="action-row">
+            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr class="section-header">
+            <td colspan="7">Lunch</td>
+          </tr>
+          <tr class="action-row">
+            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr class="section-header">
+            <td colspan="7">Dinner</td>
+          </tr>
+          <tr class="action-row">
+            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr class="section-header">
+            <td colspan="7">Snacks</td>
+          </tr>
+          <tr class="action-row">
+            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr class="totals-row">
+            <td class="label">Totals</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr class="goal-row">
+            <td class="label">Your Daily Goal</td>
+            <td>2,140</td>
+            <td>268</td>
+            <td>71</td>
+            <td>107</td>
+            <td>2,300</td>
+            <td>80</td>
+          </tr>
+          <tr class="remaining-row">
+            <td class="label">Remaining</td>
+            <td class="positive">2,140</td>
+            <td class="positive">268</td>
+            <td class="positive">71</td>
+            <td class="positive">107</td>
+            <td class="positive">2,300</td>
+            <td class="positive">80</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="complete-entry">
+        <p class="complete-text">
+          When you're finished logging all foods and exercise for this day,
+          click here:
+        </p>
+        <button class="btn-complete">Complete This Entry</button>
+      </div>
+
+      <section class="diary-widgets">
+        <div class="water-consumption">
+          <div class="widget-header">
+            <h3>Water Consumption</h3>
+          </div>
+
+          <div class="water-stats">
+            <span><strong>Today's Water Total</strong></span>
+            <span class="water-amount">0 cups <a href="#">✏️</a></span>
+          </div>
+
+          <p class="water-desc">
+            Aim to drink at least 8 cups of water today. You can quick add
+            common sizes or enter a custom amount. <a href="#">Change Units</a>
+          </p>
+
+          <div class="water-controls">
+            <div class="water-graphic-placeholder"></div>
+
+            <div class="water-actions">
+              <strong>Quick Add</strong>
+              <div class="quick-add">
+                <button>+1 cup</button> <button>+2 cups</button>
+                <button>+4 cups</button>
+              </div>
+
+              <strong>Add Custom</strong>
+              <div class="custom-add">
+                <input type="text" class="custom-cups" /> cups
+                <button class="btn-add">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="food-notes">
+          <div class="widget-header">
+            <h3>Today's Food Notes</h3>
+            <a href="#" class="edit-note">Edit Note ✏️</a>
+          </div>
+          <textarea placeholder="Write a note..."></textarea>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+
+    <footer class="main-footer">
+      <div class="footer-container">
+        <nav class="footer-links">
+          <a href="#">Calorie Counter</a>
+          <a href="#">Blog</a>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Contact Us</a>
+          <a href="#">API</a>
+          <a href="#">Jobs</a>
+          <a href="#">Feedback</a>
+          <a href="#">Community Guidelines</a>
+          <a href="#">Cookie Preferences</a>
+        </nav>
+
+        <div class="footer-lang">
+          <select>
+            <option>English</option>
+            <option>Español</option>
+          </select>
+        </div>
+      </div>
+      <div class="footer-copyright">© 2026 MyFitnessPal, Inc.</div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+/* =======================
+   FOOTER
+======================= */
+
+.main-footer {
+    /* background: #ababab; */
+    height:100%;
+    width: 100%;
+    
+}
+.footer-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-links {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    
+}
+
+.footer-links a {
+    color: #0066ee;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+}
+.footer-copyright {
+    text-align: center;
+    color: black;
+    font-size: 10px;
+    margin-top: 35px;
+    margin-bottom: 20px;
+}
+.footer-lang {
+    margin-left: auto;
+}

@@ -1,11 +1,13 @@
+
 body{
     font-family: Arial;
     background:#ffffff;
+    margin: 0;
 }
 
 .container{
     width:980px;
-    margin:auto;
+    margin:auto;    
 }
 
 h1{

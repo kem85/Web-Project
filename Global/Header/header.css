@@ -1,0 +1,46 @@
+/* =======================
+   HEADER
+======================= */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:white;
+border-bottom:1px solid #ddd;
+margin: 0;
+}
+
+.logo h1{
+color:#1a73e8;
+margin:0;
+cursor: pointer;
+font-size:28px;
+}
+
+.user-section{
+display:flex;
+align-items:center;
+gap:15px;
+font-size:14px;
+}
+.user-section a {
+   color: black;
+   text-decoration: none;
+   cursor: pointer;
+}
+
+.user-section a.logout {
+   color: red;
+}
+
+.streak{
+color:#333;
+font-weight:bold;
+display:flex;
+align-items:center;
+gap:15px;
+font-size:14px;
+}
+

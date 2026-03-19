@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Charts - Fitness Tracker VY</title>
+    <link rel="stylesheet" href="Charts.css">
+    <link rel="stylesheet" href="../Check_In/style_checkin_main.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">
+            <h1><a href="index.html">myfitnesspal</a></h1>
+        </div>
+
+        <div class="user-section">
+            <span>Hi <span id="username">User</span></span>
+            <a href="#">Help</a>
+            <a href="#">Settings</a>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">My Home</a></li>
+            <li><a href="Check-In.html">Check in</a></li>
+            <li><a href="Food-Diary.html">Food Diary</a></li>
+            <li class="active"><a href="Charts.html">Charts</a></li>
+            <li><a href="Profile.html">Profile</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard">
+        <div class="charts-container">
+
+            <h2>Charts and Reports</h2>
+
+            <div class="report-controls">
+                <div class="report-select">
+                    <label for="reportType">Choose a report:</label>
+                    <select id="reportType">
+                        <option value="weight">Weight</option>
+                        <option value="calories">Calories</option>
+                        <option value="water">Water Intake</option>
+                        <option value="touch grass?">Touch Grass?</option>
+                        <option value="Shower?">Shower?</option>
+                    </select>
+                </div>
+
+                <div class="export-btn-container">
+                    <button type="button">EXPORT</button>
+                </div>
+            </div>
+
+            <div class="report-period">
+                <h3>Reporting period:</h3>
+                <div class="period-links">
+                    <a href="#">Last 7 days</a>
+                    <a href="#">Last 30 days</a>
+                    <a href="#">Last 90 days</a>
+                    <a href="#">Last 180 days</a>
+                    <a href="#">Last year</a>
+                </div>
+            </div>
+
+           <div class="chart-card">
+                <h3>Weight</h3>
+                <canvas id="weightChart"></canvas>
+            </div>
+
+        </div> 
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <nav class="footer-links">
+                <a href="#">Calorie Counter</a>
+                <a href="#">Blog</a>
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Contact Us</a>
+                <a href="#">API</a>
+                <a href="#">Jobs</a>
+                <a href="#">Feedback</a>
+                <a href="#">Community Guidelines</a>
+                <a href="#">Cookie Preferences</a>
+            </nav>
+
+            <div class="footer-lang">
+                <select>
+                    <option>English</option>
+                    <option>Español</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="footer-copyright">
+            © 2026 MyFitnessPal, Inc.
+        </div>
+    </footer>
+
+</body>
+</html>

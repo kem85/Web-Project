@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Check In</title>
+
+    <link rel="stylesheet" href="style_checkin_main.css" />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+
+    <header class="header">
+      <div class="logo">
+        <h1><a href="index.html">myfitnesspal</a></h1>
+      </div>
+
+      <div class="user-section">
+        <span>Hi <span id="username">User</span></span>
+
+        <a href="#">Help</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+      </div>
+    </header>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+            <ul>
+                <li><a href="index.html">My Home</a></li>
+                <li><a href="Check-In.html">Check in</a></li>
+                <li><a href="Food-Diary.html">Food Diary</a></li>
+                <li><a href="Charts.html">Charts</a></li>
+                <li><a href="Profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    <!-- PAGE TITLE -->
+
+    <section class="page-title">
+      <h2>Check-In</h2>
+    </section>
+
+    <!-- CHECKIN SECTION -->
+
+    <section class="checkin-container">
+      <div class="inputs">
+        <div class="input-box">
+          <label>Enter today's weight:</label>
+
+          <input id="weightInput" type="number" placeholder="kg" />
+        </div>
+
+        <div class="input-box">
+          <label>Enter today's Steps:</label>
+
+          <input id="stepsInput" type="number" placeholder="steps" />
+        </div>
+      </div>
+
+      <p class="last-weight">
+        Last recorded weight: <span id="lastWeight">None</span>
+      </p>
+
+      <!-- MEASUREMENTS TABLE -->
+
+      <table class="measurements">
+        <thead>
+          <tr>
+            <th>Other Measurements</th>
+            <th>Last Entry</th>
+            <th>Today's Entry</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Neck</td>
+            <td id="lastNeck">None</td>
+            <td><input id="neckInput" type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Waist</td>
+            <td id="lastWaist">None</td>
+            <td><input id="waistInput" type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Hips</td>
+            <td id="lastHips">None</td>
+            <td><input id="hipsInput" type="number" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button id="saveBtn" class="save-btn">SAVE</button>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>
