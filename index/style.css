@@ -5,6 +5,7 @@
 body{
 font-family: Arial, sans-serif;
 margin:0;
+padding: 0px;
 background:#f5f5f5;
 color:#333;
 }
@@ -85,6 +86,7 @@ opacity:0.8;
 
 .page-title{
 padding:25px 40px;
+padding-right: 0px;
 }
 
 .page-title h2{
@@ -189,11 +191,7 @@ margin:20px auto;
 /* =======================
    CHECK-IN PAGE
    (page 2)
-======================= */
-
-.checkin-container{
-padding:40px;
-}
+   ======================= */ 
 
 /* top inputs */
 

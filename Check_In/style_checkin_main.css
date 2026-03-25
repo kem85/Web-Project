@@ -42,7 +42,7 @@ cursor:pointer;
 
 .logo a:hover{
 opacity:0.8;
-}
+} */
 
 .user-section{
 display:flex;
@@ -59,13 +59,15 @@ align-items:center;
 gap:15px;
 font-size:14px;
 }
-
+.page-title{
+padding: 0px 40px;
+}
 
 /* =======================
    NAVBAR
 ======================= */
 
-.navbar{
+/* .navbar{
 background:#1a73e8;
 padding:12px 40px;
 }
@@ -86,29 +88,29 @@ cursor:pointer;
 
 .navbar li:hover{
 opacity:0.8;
-}
+} */
 
 
 /* navbar links */
 
-.navbar a{
+/* .navbar a{
 color:white;
 text-decoration:none;
-}
+} */
 
 /* hover effect */
 
-.navbar li:hover{
+/* .navbar li:hover{
 opacity:0.8;
 cursor:pointer;
-}
+} */
 
 /* active page */
 
-.navbar .active{
+/* .navbar .active{
 border-bottom:3px solid white;
 padding-bottom:4px;
-} 
+}  */
 
 
 /* =======================
@@ -243,7 +245,7 @@ margin:20px auto;
 ======================= */
 
 .checkin-container{
-padding:40px;
+padding:0px 40px;
 }
 
 /* top inputs */
@@ -379,7 +381,7 @@ background:white;
 border-radius:50%;}
 
 /*Footer*/ 
-.main-footer {
+/* .main-footer {
     background: #ababab;
     height:100%;
     width: 100%;
@@ -416,4 +418,4 @@ border-radius:50%;}
 }
 .footer-lang {
     margin-left: auto;
-}
+} */

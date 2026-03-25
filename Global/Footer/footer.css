@@ -3,9 +3,10 @@
 ======================= */
 
 .main-footer {
-    /* background: #ababab; */
+    background: inherit; /* match the body background of each page (white for Profile, #f5f5f5 for Charts) */
     height:100%;
-    width: 100%;
+    width: auto;
+    padding-right: 30px;
     
 }
 .footer-container {
