@@ -1,0 +1,359 @@
+/* =======================
+   GENERAL STYLES
+======================= */
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#f5f5f5;
+color:#333;
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+
+/* =======================
+   HEADER
+======================= */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:white;
+border-bottom:1px solid #ddd;
+}
+
+.logo h1{
+color:#1a73e8;
+margin:0;
+font-size:28px;
+}
+
+.logo a{
+text-decoration:none;
+color:#1a73e8;
+cursor:pointer;
+}
+
+.logo a:hover{
+opacity:0.8;
+}
+
+.user-section{
+display:flex;
+align-items:center;
+gap:15px;
+font-size:14px;
+}
+
+
+
+/* =======================
+   NAVBAR
+======================= */
+
+.navbar{
+background:#1a73e8;
+padding:12px 40px;
+}
+
+.navbar ul{
+display:flex;
+gap:30px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.navbar li{
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.navbar li:hover{
+opacity:0.8;
+}
+
+
+/* navbar links */
+
+.navbar a{
+color:white;
+text-decoration:none;
+}
+
+/* hover effect */
+
+.navbar li:hover{
+opacity:0.8;
+cursor:pointer;
+}
+
+/* active page */
+
+.navbar .active{
+border-bottom:3px solid white;
+padding-bottom:4px;
+} 
+
+
+/* =======================
+   PAGE TITLE
+======================= */
+
+
+
+.user-img{
+width:50px;
+height:50px;
+border-radius:50%;
+}
+
+.dashboard{
+display:flex;
+gap:40px;
+padding:40px;
+}
+
+/* cards */
+
+
+/* calories input */
+
+
+.calories-input input{
+padding:8px;
+width:100px;
+}
+
+/* macros */
+
+.macro{
+display:flex;
+justify-content:space-between;
+margin:12px 0;
+}
+
+.macro-table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+.macro-table th{
+background:#1a73e8;
+color:white;
+padding:8px;
+}
+
+.macro-table td{
+border:1px solid #ddd;
+padding:8px;
+text-align:center;
+}
+
+/* calorie circle */
+
+.calorie-circle{
+width:150px;
+height:150px;
+border-radius:50%;
+border:10px solid #e5e5e5;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:28px;
+font-weight:bold;
+
+margin:20px auto;
+}
+
+
+/* =======================
+   CHECK-IN PAGE
+   (page 2)
+======================= */
+
+.checkin-container{
+padding:40px;
+}
+
+/* top inputs */
+
+.inputs{
+display:flex;
+gap:60px;
+margin-bottom:20px;
+}
+
+.input-box{
+display:flex;
+flex-direction:column;
+}
+
+.input-box label{
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.input-box input{
+width:150px;
+padding:10px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+/* last weight */
+
+.last-weight{
+margin:20px 0;
+color:#777;
+}
+
+
+/* =======================
+   TABLE
+======================= */
+
+.measurements{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+background:white;
+}
+
+.measurements th{
+background:#1a73e8;
+color:white;
+padding:12px;
+text-align:center;
+}
+
+.measurements td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+
+.measurements input{
+padding:8px;
+width:100px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+
+/* =======================
+   BUTTON
+======================= */
+
+.save-btn{
+margin-top:30px;
+padding:12px 40px;
+background:#1a73e8;
+color:white;
+border:none;
+font-weight:bold;
+cursor:pointer;
+border-radius:4px;
+}
+
+.save-btn:hover{
+background:#155ec0;
+}
+/* =======================
+   PROGRESS CIRCLE
+======================= */
+
+.progress-circle{
+
+display:flex;
+justify-content:center;
+margin-top:20px;
+
+}
+
+.circle{
+
+width:160px;
+height:160px;
+
+border-radius:50%;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:28px;
+font-weight:bold;
+
+background:conic-gradient(
+#1a73e8 0deg,
+#1a73e8 360deg,
+#e5e5e5 360deg
+);
+
+position:relative;
+
+}
+
+.circle::before{
+
+content:"";
+
+position:absolute;
+
+width:120px;
+height:120px;
+
+background:white;
+
+border-radius:50%;}
+s
+/*Footer*/ 
+.main-footer {
+    background: #ababab;
+    height:100%;
+    width: 100%;
+}
+.footer-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-links {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    
+}
+
+.footer-links a {
+    color: #0066ee;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+}
+.footer-copyright {
+    text-align: center;
+    color: black;
+    font-size: 10px;
+    margin-top: 35px;
+}
+.footer-lang {
+    margin-left: auto;
+}

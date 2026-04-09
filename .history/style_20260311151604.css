@@ -1,0 +1,513 @@
+/* ==========================================================
+   1. GLOBAL STYLES
+   Basic setup for the whole page
+========================================================== */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #ffffff; /* Main page background is white */
+  color: #333; /* Default text color */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ==========================================================
+   2. TOP HEADER
+   The white bar containing the logo and user settings
+========================================================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo h1 {
+  color: #1a73e8;
+  margin: 0;
+  font-size: 28px;
+}
+
+.logo a {
+  text-decoration: none;
+  color: #1a73e8;
+  cursor: pointer;
+}
+
+.logo a:hover {
+  opacity: 0.8;
+}
+
+/* User links (Hi User, Help, Settings, Logout) */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 14px;
+}
+
+.user-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* ==========================================================
+   3. NAVIGATION BAR
+   The blue bar with main site links
+========================================================== */
+.navbar {
+  background: #1a73e8;
+  padding: 12px 40px;
+}
+
+.navbar ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar li:hover {
+  opacity: 0.8;
+}
+
+/* Highlights the page you are currently on */
+.navbar .active {
+  border-bottom: 3px solid white;
+  padding-bottom: 4px;
+} 
+
+/* ==========================================================
+   4. MAIN DIARY CONTAINER
+   The central wrapper for everything below the navbar
+========================================================== */
+.diary-container {
+  max-width: 950px;
+  margin: 30px auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+/* ==========================================================
+   5. DATE SELECTOR
+   The header area showing "Your Food Diary For: [Date]"
+========================================================== */
+.diary-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px; 
+  border-bottom: 1px solid #eaeaea; 
+}
+
+.diary-header > span {
+  color: #00548f;
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+/* The blue box containing the arrows and date */
+.date-controls {
+  display: flex;
+  align-items: center;
+  background-color: #00548f;
+  color: white;
+  height: 30px;
+  border-radius: 3px;
+}
+
+.date-controls button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.date-controls button:hover {
+  background-color: #003d6b;
+}
+
+.date-controls .current-date {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 0 10px;
+}
+
+.date-controls .calendar-icon {
+  height: 20px;
+  margin-left: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* ==========================================================
+   6. MAIN FOOD TABLE
+   The grid showing Breakfast, Lunch, Dinner, and Macros
+========================================================== */
+.dashboard {
+  display: table !important; /* Forces table structure */
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* Enforcing standard table layout behaviors */
+.dashboard thead { display: table-header-group !important; }
+.dashboard tbody { display: table-row-group !important; }
+.dashboard tfoot { display: table-footer-group !important; }
+.dashboard tr { display: table-row !important; }
+.dashboard th, .dashboard td { display: table-cell !important; }
+
+/* Sets Column 1 (Meals) to 40% width, and Macros to 10% each */
+.dashboard th:first-child, 
+.dashboard td:first-child {
+  width: 40%;       
+  text-align: left;
+}
+.dashboard th:not(:first-child), 
+.dashboard td:not(:first-child) {
+  width: 10%;       
+  text-align: center;
+}
+
+/* "Breakfast" header text alignment */
+.dashboard thead th.meal-col {
+  color: #00548f;
+  font-size: 20px;
+  font-weight: bold;
+  vertical-align: bottom;
+  padding-bottom: 8px;
+}
+
+/* Blue Macro Headers (Calories, Carbs, etc.) */
+.dashboard thead th:not(.meal-col) {
+  background-color: #00548f;
+  color: white;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 8px 0;
+  border-left: 1px solid #fff; /* White separating lines */
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+.dashboard thead th small {
+  font-weight: normal;
+  font-size: 10px;
+}
+
+/* Headers for Lunch, Dinner, Snacks */
+.section-header td {
+  color: #00548f;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 25px 0 8px 0;
+  border-bottom: none;
+  text-align: left;
+}
+
+/* "Add Food | Quick Tools" rows */
+.action-row td {
+  padding: 10px 0;
+  border-bottom: 1px solid #eaeaea; /* Light gray line under sections */
+}
+
+.action-row td:first-child {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.action-row a {
+  color: #00548f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.action-row a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================
+   7. TABLE FOOTER (TOTALS & GOALS)
+   The bottom rows of the table calculating the daily macros
+========================================================== */
+.dashboard tfoot td {
+  text-align: center;
+  padding: 10px 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Labels on the left (Totals, Your Daily Goal, Remaining) */
+.dashboard tfoot .label {
+  text-align: right;
+  padding-right: 15px;
+  color: #333;
+}
+
+/* Gray background for Totals row */
+.totals-row td {
+  background-color: #f6f6f6;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.goal-row td {
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* MyFitnessPal Green text for remaining numbers */
+.remaining-row td, .positive {
+  color: #589442; 
+}
+
+/* Keeps the word "Remaining" dark instead of green */
+.remaining-row .label {
+  color: #333; 
+}
+
+/* ==========================================================
+   8. ACTION BUTTONS
+   The "Complete This Entry" button area
+========================================================== */
+.complete-entry {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.complete-text {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.btn-complete {
+  background-color: #5cb85c;
+  background-image: linear-gradient(to bottom, #74c43e, #599b2b);
+  border: 1px solid #4a8222;
+  color: white;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-complete:hover {
+  background-image: linear-gradient(to bottom, #68b038, #508c26);
+}
+
+/* ==========================================================
+   9. BOTTOM WIDGETS
+   The side-by-side Water Consumption and Food Notes boxes
+========================================================== */
+.diary-widgets {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #eaeaea; 
+  padding-top: 20px;
+  margin-top: 30px;
+}
+
+/* Makes each box take up just under half the width */
+.water-consumption, .food-notes {
+  width: 48%;
+  border: 1px solid #eaeaea; 
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* Headers inside the widgets */
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+}
+
+.widget-header h3 {
+  color: #00548f;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Links inside the widgets */
+.edit-note, .water-amount a, .water-desc a, .quick-add button {
+  color: #00a1e4;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+/* -- Water Widget Specifics -- */
+.water-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.water-amount {
+  font-weight: bold;
+}
+
+.water-desc {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.water-controls {
+  display: flex;
+  gap: 20px;
+}
+
+/* Drawn CSS outline to mimic the empty water glass */
+.water-graphic-placeholder {
+  width: 35px;
+  height: 60px;
+  border: 2px solid #a3a3a3;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  margin-top: 5px;
+}
+
+.water-actions strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.quick-add {
+  margin-bottom: 15px;
+}
+
+.quick-add button {
+  background: none;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 15px;
+}
+
+.quick-add button:hover {
+  text-decoration: underline;
+}
+
+/* Custom Add input area */
+.custom-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.custom-cups {
+  width: 45px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.btn-add {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* -- Food Notes Specifics -- */
+.food-notes textarea {
+  width: 100%;
+  height: 150px;
+  background-color: #f6f6f6;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+  resize: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+/* ==========================================================
+   10. FOOTER
+   The gray section at the absolute bottom of the page
+========================================================== */
+.main-footer {
+  width: 100%;
+  background-color: #f5f5f5; 
+  padding: 30px 0; 
+  border-top: 1px solid #ddd; 
+  margin-top: 50px; /* Pushes the footer down from the content */
+}
+
+/* Container keeps the footer content aligned with the main page width */
+.footer-container {
+  display: flex;
+  align-items: center;
+  max-width: 950px; /* Matches .diary-container width */
+  margin: 0 auto;   /* Centers the container */
+  padding: 0 20px;
+}
+
+.footer-links {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.footer-links a {
+  color: #0066ee;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.footer-links a:hover {
+  opacity: 0.8;
+}
+
+.footer-copyright {
+  text-align: center;
+  color: black;
+  font-size: 10px;
+  margin-top: 35px;
+}
+
+.footer-lang {
+  margin-left: auto;
+}

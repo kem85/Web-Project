@@ -1,0 +1,276 @@
+/* =======================
+   GENERAL STYLES
+======================= */
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#f5f5f5;
+color:#333;
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+
+
+/* =======================
+   HEADER
+======================= */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:white;
+border-bottom:1px solid #ddd;
+}
+
+.logo h1{
+color:#1a73e8;
+margin:0;
+font-size:28px;
+}
+
+.logo a{
+text-decoration:none;
+color:#1a73e8;
+cursor:pointer;
+}
+
+.logo a:hover{
+opacity:0.8;
+}
+
+.user-section{
+display:flex;
+align-items:center;
+gap:15px;
+font-size:14px;
+}
+
+
+
+/* =======================
+   NAVBAR
+======================= */
+
+.navbar{
+background:#1a73e8;
+padding:12px 40px;
+}
+
+.navbar ul{
+display:flex;
+gap:30px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.navbar li{
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.navbar li:hover{
+opacity:0.8;
+}
+
+
+/* navbar links */
+
+.navbar a{
+color:white;
+text-decoration:none;
+}
+
+/* hover effect */
+
+.navbar li:hover{
+opacity:0.8;
+cursor:pointer;
+}
+
+/* active page */
+
+.navbar .active{
+border-bottom:3px solid white;
+padding-bottom:4px;
+} 
+
+
+/* =======================
+   PAGE TITLE
+======================= */
+
+
+
+.user-img{
+width:50px;
+height:50px;
+border-radius:50%;
+}
+
+/* =========================================
+   MAIN FOOD TABLE (.dashboard) - FIXED
+   ========================================= */
+.dashboard {
+  display: table !important; /* Forces table layout */
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.dashboard thead { display: table-header-group !important; }
+.dashboard tbody { display: table-row-group !important; }
+.dashboard tfoot { display: table-footer-group !important; }
+.dashboard tr { display: table-row !important; }
+.dashboard th, .dashboard td { display: table-cell !important; }
+
+/* Enforce precise column widths */
+.dashboard th:first-child, 
+.dashboard td:first-child {
+  width: 40%;       /* Makes the Meal column wide */
+  text-align: left;
+}
+
+.dashboard th:not(:first-child), 
+.dashboard td:not(:first-child) {
+  width: 10%;       /* Distributes the 6 macro columns evenly */
+  text-align: center;
+}
+
+/* -----------------------------------------
+   Headers & Sections
+   ----------------------------------------- */
+/* Breakfast Header */
+.dashboard thead th.meal-col {
+  color: #00548f;
+  font-size: 22px;
+  font-weight: bold;
+  vertical-align: bottom;
+  padding-bottom: 8px;
+}
+
+/* Blue Macro Headers */
+.dashboard thead th:not(.meal-col) {
+  background-color: #00548f;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 8px 0;
+  border-left: 1px solid #fff; /* White line separation */
+  vertical-align: middle;
+}
+
+.dashboard thead th small {
+  font-weight: normal;
+  font-size: 10px;
+}
+
+/* Lunch, Dinner, Snacks Headers */
+.section-header td {
+  color: #00548f;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 30px 0 8px 0;
+  border-bottom: none;
+}
+
+/* -----------------------------------------
+   Action Rows (Add Food | Quick Tools)
+   ----------------------------------------- */
+.action-row td {
+  padding: 12px 0;
+  border-bottom: 1px solid #eaeaea; /* Light gray line under each section */
+}
+
+.action-row td:first-child {
+  font-size: 13px;
+}
+
+.action-row a {
+  color: #00548f;
+  text-decoration: none;
+}
+
+.action-row a:hover {
+  text-decoration: underline;
+}
+
+/* -----------------------------------------
+   TABLE FOOTER (Totals & Goals)
+   ----------------------------------------- */
+.dashboard tfoot td {
+  padding: 10px 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Right-align the labels (Totals, Your Daily Goal, Remaining) */
+.dashboard tfoot .label {
+  text-align: right;
+  padding-right: 15px;
+  color: #333;
+}
+
+/* Gray background for the Totals row */
+.totals-row td {
+  background-color: #f6f6f6;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.goal-row td {
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* MFP Green text for Remaining values */
+.remaining-row .positive {
+  color: #589442; 
+}
+
+
+/*Footer*/ 
+.main-footer {
+    height:100%;
+    width: 100%;
+}
+.footer-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-links {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    
+}
+
+.footer-links a {
+    color: #0066ee;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+}
+.footer-copyright {
+    text-align: center;
+    color: black;
+    font-size: 10px;
+    margin-top: 35px;
+}
+.footer-lang {
+    margin-left: auto;
+}

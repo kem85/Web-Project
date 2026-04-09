@@ -1,0 +1,424 @@
+/* =======================
+   GENERAL STYLES
+======================= */
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#f5f5f5;
+color:#333;
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+
+
+/* =======================
+   HEADER
+======================= */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:white;
+border-bottom:1px solid #ddd;
+}
+
+.logo h1{
+color:#1a73e8;
+margin:0;
+font-size:28px;
+}
+
+.logo a{
+text-decoration:none;
+color:#1a73e8;
+cursor:pointer;
+}
+
+.logo a:hover{
+opacity:0.8;
+}
+
+.user-section{
+display:flex;
+align-items:center;
+gap:15px;
+font-size:14px;
+}
+
+
+
+/* =======================
+   NAVBAR
+======================= */
+
+.navbar{
+background:#1a73e8;
+padding:12px 40px;
+}
+
+.navbar ul{
+display:flex;
+gap:30px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.navbar li{
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.navbar li:hover{
+opacity:0.8;
+}
+
+
+/* navbar links */
+
+.navbar a{
+color:white;
+text-decoration:none;
+}
+
+/* hover effect */
+
+.navbar li:hover{
+opacity:0.8;
+cursor:pointer;
+}
+
+/* active page */
+
+.navbar .active{
+border-bottom:3px solid white;
+padding-bottom:4px;
+} 
+
+
+/* =======================
+   PAGE TITLE
+======================= */
+
+
+
+.user-img{
+width:50px;
+height:50px;
+border-radius:50%;
+}
+
+/* =========================================
+   GENERAL MAIN CONTAINER
+   ========================================= */
+.diary-container {
+  max-width: 950px;
+  margin: 30px auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+/* =========================================
+   DATE SELECTOR HEADER
+   ========================================= */
+.diary-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.diary-header > span {
+  color: #00548f;
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.date-controls {
+  display: flex;
+  align-items: center;
+  background-color: #00548f;
+  color: white;
+  height: 30px;
+}
+
+.date-controls button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.date-controls button:hover {
+  background-color: #003d6b;
+}
+
+.date-controls .current-date {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 0 10px;
+}
+
+.date-controls .calendar-icon {
+  height: 20px;
+  margin-left: 8px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* =========================================
+   MAIN FOOD TABLE (.dashboard) - FIXED LAYOUT
+   ========================================= */
+.dashboard {
+  display: table !important; /* Forces table layout */
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* Force standard table behavior */
+.dashboard thead { display: table-header-group !important; }
+.dashboard tbody { display: table-row-group !important; }
+.dashboard tfoot { display: table-footer-group !important; }
+.dashboard tr { display: table-row !important; }
+.dashboard th, .dashboard td { display: table-cell !important; }
+
+/* Enforce precise column widths */
+.dashboard th:first-child, 
+.dashboard td:first-child {
+  width: 40%;       
+  text-align: left;
+}
+
+.dashboard th:not(:first-child), 
+.dashboard td:not(:first-child) {
+  width: 10%;       
+  text-align: center;
+}
+
+/* Breakfast Header */
+.dashboard thead th.meal-col {
+  color: #00548f;
+  font-size: 20px;
+  font-weight: bold;
+  vertical-align: bottom;
+  padding-bottom: 8px;
+}
+
+/* Blue Macro Headers (Calories, Carbs, Fat, etc.) */
+.dashboard thead th:not(.meal-col) {
+  background-color: #00548f;
+  color: white;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 8px 0;
+  border-left: 1px solid #fff; 
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+.dashboard thead th small {
+  font-weight: normal;
+  font-size: 10px;
+}
+
+/* Lunch, Dinner, Snacks Headers */
+.section-header td {
+  color: #00548f;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 25px 0 8px 0;
+  border-bottom: none;
+  text-align: left;
+}
+
+/* Action Rows (Add Food | Quick Tools) */
+.action-row td {
+  padding: 10px 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.action-row td:first-child {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.action-row a {
+  color: #00548f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.action-row a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   TABLE FOOTER (Totals & Goals)
+   ========================================= */
+.dashboard tfoot td {
+  text-align: center;
+  padding: 10px 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.dashboard tfoot .label {
+  text-align: right;
+  padding-right: 15px;
+  color: #333;
+}
+
+.totals-row td {
+  background-color: #f6f6f6;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.goal-row td {
+  border-bottom: 1px solid #eaeaea;
+}
+
+.remaining-row td {
+  color: #589442;
+}
+
+.remaining-row .label {
+  color: #333;
+}
+
+.positive {
+  color: #589442;
+}
+/* =========================================
+   BUTTONS
+   ========================================= */
+.complete-entry {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.btn-complete {
+  background-color: #5cb85c;
+  background-image: linear-gradient(to bottom, #74c43e, #599b2b);
+  border: 1px solid #4a8222;
+  color: white;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-complete:hover {
+  background-image: linear-gradient(to bottom, #68b038, #508c26);
+}
+
+/* =========================================
+   BOTTOM WIDGETS (Water & Notes)
+   ========================================= */
+.diary-widgets {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #eaeaea;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.water-consumption, .food-notes {
+  width: 48%;
+}
+
+.diary-widgets h3 {
+  color: #00548f;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 5px;
+}
+
+.water-consumption p {
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.quick-add button {
+  color: #00a1e4;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 15px;
+}
+
+.quick-add button:hover {
+  text-decoration: underline;
+}
+
+.food-notes textarea {
+  width: 100%;
+  height: 100px;
+  background-color: #f6f6f6;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+  resize: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+
+/*Footer*/ 
+.main-footer {
+    height:100%;
+    width: 100%;
+}
+.footer-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-links {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    
+}
+
+.footer-links a {
+    color: #0066ee;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+}
+.footer-copyright {
+    text-align: center;
+    color: black;
+    font-size: 10px;
+    margin-top: 35px;
+}
+.footer-lang {
+    margin-left: auto;
+}
