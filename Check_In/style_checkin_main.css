@@ -331,6 +331,20 @@ border-radius:4px;
 .save-btn:hover{
 background:#155ec0;
 }
+
+.status-message{
+margin-top:15px;
+min-height:24px;
+font-weight:bold;
+}
+
+.status-message.success{
+color:#1f7a1f;
+}
+
+.status-message.error{
+color:#c62828;
+}
 /* =======================
    PROGRESS CIRCLE
 ======================= */
