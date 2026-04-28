@@ -4,7 +4,7 @@
 
 // ── 1. AUTO-REDIRECT IF ALREADY LOGGED IN ────
 if (localStorage.getItem('ft_loggedIn') === 'true') {
-  window.location.replace('index.html');
+  window.location.replace('../index/index.html');
 }
 
 // ── Inject styles ─────────────────────────────
@@ -107,6 +107,16 @@ const passInput  = document.getElementById('password');
 const loginBtn   = loginForm.querySelector('.btn-login');
 const forgotLink = document.querySelector('.forgot-link');
 const footerText = document.querySelector('.footer-text');
+const eyeIcon = document.getElementById('eyeIcon');
+
+if (eyeIcon) {
+  eyeIcon.addEventListener('click', () => {
+    const isPassword = passInput.getAttribute('type') === 'password';
+    passInput.setAttribute('type', isPassword ? 'text' : 'password');
+    eyeIcon.classList.toggle('fa-eye');
+    eyeIcon.classList.toggle('fa-eye-slash');
+  });
+}
 
 loginForm.classList.add('form-panel');
 loginForm.id = 'loginPanel';
@@ -399,7 +409,7 @@ loginForm.addEventListener('submit', (e) => {
         clearFailures();
         localStorage.setItem('ft_loggedIn', 'true');
         loginBtn.textContent = '✓ Success!';
-        setTimeout(() => { window.location.href = 'index.html'; }, 600);
+        setTimeout(() => { window.location.href = '../index/index.html'; }, 600);
       } else {
         loginBtn.disabled    = false;
         loginBtn.textContent = 'Log In';
@@ -462,7 +472,7 @@ signupBtn.addEventListener('click', () => {
     localStorage.setItem('ft_credentials', JSON.stringify({ email, password, name }));
     localStorage.setItem('ft_loggedIn', 'true');
     signupBtn.textContent = '✓ Account created!';
-    setTimeout(() => { window.location.href = 'index.html'; }, 700);
+    setTimeout(() => { window.location.href = '../index/index.html'; }, 700);
   }, 900);
 });
 

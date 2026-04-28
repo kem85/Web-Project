@@ -1,7 +1,8 @@
 const STORAGE_KEYS = {
   nutrition: "fitnessTrackerNutrition",
   checkIn: "fitnessTrackerCheckIn",
-  profile: "fitnessTrackerProfile",
+  profile: "ft_profile",
+  credentials: "ft_credentials",
 };
 
 const DEFAULT_STATE = {
@@ -56,10 +57,12 @@ function getCheckInSummary() {
 }
 
 function getProfileSummary() {
-  const profile = safeParse(STORAGE_KEYS.profile);
+  const profile = safeParse(STORAGE_KEYS.profile) || {};
+  const credentials = safeParse(STORAGE_KEYS.credentials) || {};
+
   return {
-    username: profile?.username || "User",
-    photo: profile?.photo || "../Profile/muslim cat.jpg",
+    username: profile.name || credentials.name || "User",
+    photo: profile.photoDataUrl || "../Profile/muslim cat.jpg",
   };
 }
 

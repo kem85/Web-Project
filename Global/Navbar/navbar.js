@@ -1,69 +1,70 @@
+function setNavItems(items) {
+  const nav = document.getElementsByClassName("navbar")[0];
+  if (!nav) return;
+
+  nav.innerHTML = `
+    <ul>
+      ${items
+        .map(
+          (item) =>
+            `<li class="${item.active ? "active" : ""}"><a href="${item.href}">${item.label}</a></li>`
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
 // Navigation for index page
 function createNavFromIndex() {
-    const nav = document.getElementsByClassName('navbar')[0];
-    nav.innerHTML = `
-<ul>
-    <li><a href="index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
-    <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
-    <li><a href="../Charts/Charts.html">Charts</a></li>
-    <li><a href="../Profile/Profile.html">Profile</a></li>
-</ul>
-`
+  setNavItems([
+    { label: "My Home", href: "index.html", active: true },
+    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
+    { label: "Charts", href: "../Charts/Charts.html" },
+    { label: "Profile", href: "../Profile/Profile.html" },
+  ]);
 }
 
 // Navigation for Check_In page
 function createNavFromCheckIn() {
-    const nav = document.getElementsByClassName('navbar')[0];
-    nav.innerHTML = `
-<ul>
-    <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="Check-In.html">Check in</a></li>
-    <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
-    <li><a href="../Charts/Charts.html">Charts</a></li>
-    <li><a href="../Profile/Profile.html">Profile</a></li>
-</ul>
-`
+  setNavItems([
+    { label: "My Home", href: "../index/index.html" },
+    { label: "Check in", href: "Check-In.html", active: true },
+    { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
+    { label: "Charts", href: "../Charts/Charts.html" },
+    { label: "Profile", href: "../Profile/Profile.html" },
+  ]);
 }
 
 // Navigation for Food-Diary page
 function createNavFromFoodDiary() {
-    const nav = document.getElementsByClassName('navbar')[0];
-    nav.innerHTML = `
-<ul>
-    <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
-    <li><a href="Food-Diary.html">Food Diary</a></li>
-    <li><a href="../Charts/Charts.html">Charts</a></li>
-    <li><a href="../Profile/Profile.html">Profile</a></li>
-</ul>
-`
+  setNavItems([
+    { label: "My Home", href: "../index/index.html" },
+    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Food Diary", href: "Food-Diary.html", active: true },
+    { label: "Charts", href: "../Charts/Charts.html" },
+    { label: "Profile", href: "../Profile/Profile.html" },
+  ]);
 }
 
 // Navigation for Charts page
 function createNavFromCharts() {
-    const nav = document.getElementsByClassName('navbar')[0];
-    nav.innerHTML = `
-<ul>
-    <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
-    <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
-    <li><a href="Charts.html">Charts</a></li>
-    <li><a href="../Profile/Profile.html">Profile</a></li>
-</ul>
-`
+  setNavItems([
+    { label: "My Home", href: "../index/index.html" },
+    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
+    { label: "Charts", href: "Charts.html", active: true },
+    { label: "Profile", href: "../Profile/Profile.html" },
+  ]);
 }
 
 // Navigation for Profile page
 function createNavFromProfile() {
-    const nav = document.getElementsByClassName('navbar')[0];
-    nav.innerHTML = `
-<ul>
-    <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
-    <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
-    <li><a href="../Charts/Charts.html">Charts</a></li>
-    <li><a href="Profile.html">Profile</a></li>
-</ul>
-`
+  setNavItems([
+    { label: "My Home", href: "../index/index.html" },
+    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
+    { label: "Charts", href: "../Charts/Charts.html" },
+    { label: "Profile", href: "Profile.html", active: true },
+  ]);
 }

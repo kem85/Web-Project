@@ -412,3 +412,12 @@ font-weight:bold;
 
 margin:20px auto;
 }
+
+
+.chart-empty {
+    margin: 14px 0 0;
+    color: #777;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
