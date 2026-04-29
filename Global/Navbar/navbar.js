@@ -4,7 +4,7 @@ function createNavFromIndex() {
     nav.innerHTML = `
 <ul>
     <li><a href="index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
+    <li><a href="../Check-In/Check-In.html">Check in</a></li>
     <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
     <li><a href="../Charts/Charts.html">Charts</a></li>
     <li><a href="../Profile/Profile.html">Profile</a></li>
@@ -32,7 +32,7 @@ function createNavFromFoodDiary() {
     nav.innerHTML = `
 <ul>
     <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
+    <li><a href="../Check-In/Check-In.html">Check in</a></li>
     <li><a href="Food-Diary.html">Food Diary</a></li>
     <li><a href="../Charts/Charts.html">Charts</a></li>
     <li><a href="../Profile/Profile.html">Profile</a></li>
@@ -46,7 +46,7 @@ function createNavFromCharts() {
     nav.innerHTML = `
 <ul>
     <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
+    <li><a href="../Check-In/Check-In.html">Check in</a></li>
     <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
     <li><a href="Charts.html">Charts</a></li>
     <li><a href="../Profile/Profile.html">Profile</a></li>
@@ -60,7 +60,7 @@ function createNavFromProfile() {
     nav.innerHTML = `
 <ul>
     <li><a href="../index/index.html">My Home</a></li>
-    <li><a href="../Check_In/Check-In.html">Check in</a></li>
+    <li><a href="../Check-In/Check-In.html">Check in</a></li>
     <li><a href="../Food-Diary/Food-Diary.html">Food Diary</a></li>
     <li><a href="../Charts/Charts.html">Charts</a></li>
     <li><a href="Profile.html">Profile</a></li>

@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <title>Check In</title>
 
-    <link rel="stylesheet" href="check in\style_checkin_main.css" />
-    <link rel="stylesheet" href="global\header\header.css">
-    <link rel="stylesheet" href="global\navbar\navbar.css">
-    <link rel="stylesheet" href="global\footer\footer.css">
+    <link rel="stylesheet" href="style_checkin_main.css" />
+    <link rel="stylesheet" href="../Global/Header/header.css">
+    <link rel="stylesheet" href="../Global/Navbar/navbar.css">
+    <link rel="stylesheet" href="../Global/Footer/footer.css">
   </head>
 
   <body>
@@ -29,16 +29,8 @@
 
     <!-- NAVBAR -->
 
-    <nav class="navbar">
+    <nav class="navbar"></nav>
 
-            <!-- <ul>
-                <li><a href="index.html">My Home</a></li>
-                <li><a href="Check-In.html">Check in</a></li>
-                <li><a href="Food-Diary.html">Food Diary</a></li>
-                <li><a href="Charts.html">Charts</a></li>
-                <li><a href="Profile.html">Profile</a></li>
-            </ul> -->
-        </nav>
     <!-- PAGE TITLE -->
 
     <section class="page-title">
@@ -51,13 +43,11 @@
       <div class="inputs">
         <div class="input-box">
           <label>Enter today's weight:</label>
-
           <input id="weightInput" type="number" placeholder="kg" />
         </div>
 
         <div class="input-box">
           <label>Enter today's Steps:</label>
-
           <input id="stepsInput" type="number" placeholder="steps" />
         </div>
       </div>
@@ -76,20 +66,17 @@
             <th>Today's Entry</th>
           </tr>
         </thead>
-
         <tbody>
           <tr>
             <td>Neck</td>
             <td id="lastNeck">None</td>
             <td><input id="neckInput" type="number" /></td>
           </tr>
-
           <tr>
             <td>Waist</td>
             <td id="lastWaist">None</td>
             <td><input id="waistInput" type="number" /></td>
           </tr>
-
           <tr>
             <td>Hips</td>
             <td id="lastHips">None</td>
@@ -102,22 +89,12 @@
       <p id="statusMessage" class="status-message"></p>
     </section>
 
-    <footer class="main-footer">
-      <!-- <div class="footer-container">
-        <p>&copy; 2024 MyFitnessPal. All rights reserved.</p>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Us</a>
-        </div> -->
-      </div>
+    <footer class="main-footer"></footer>
 
-    </footer>
-
-    <script src="script.js"></script>
+    <script src="Check-in.js"></script>
+    <script src="../Global/Header/header.js"></script>
+    <script src="../Global/Navbar/navbar.js"></script>
+    <script>createNavFromCheckIn();</script>
+    <script src="../Global/Footer/footer.js"></script>
   </body>
-  <script src="../Global/Header/header.js"></script>
-  <script src="../Global/Navbar/navbar.js"></script>
-  <script>createNavFromCheckIn();</script>
-  <script src="../Global/Footer/footer.js"></script>
 </html>
