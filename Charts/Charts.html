@@ -48,30 +48,30 @@
                         <option value="weight">Weight</option>
                         <option value="calories">Calories</option>
                         <option value="water">Water Intake</option>
-                        <option value="touch grass?">Touch Grass?</option>
-                        <option value="Shower?">Shower?</option>
+                        <option value="steps">Steps</option>
                     </select>
                 </div>
 
                 <div class="export-btn-container">
-                    <button type="button">EXPORT</button>
+                    <button type="button" id="exportChartBtn">EXPORT</button>
                 </div>
             </div>
 
             <div class="report-period">
                 <h3>Reporting period:</h3>
                 <div class="period-links">
-                    <a href="#">Last 7 days</a>
-                    <a href="#">Last 30 days</a>
-                    <a href="#">Last 90 days</a>
-                    <a href="#">Last 180 days</a>
-                    <a href="#">Last year</a>
+                    <a href="#" data-days="7" class="active-period">Last 7 days</a>
+                    <a href="#" data-days="30">Last 30 days</a>
+                    <a href="#" data-days="90">Last 90 days</a>
+                    <a href="#" data-days="180">Last 180 days</a>
+                    <a href="#" data-days="365">Last year</a>
                 </div>
             </div>
 
            <div class="chart-card">
-                <h3>Weight</h3>
-                <canvas id="weightChart"></canvas>
+                <h3 id="chartTitle">Weight</h3>
+                <canvas id="reportChart" aria-label="Selected fitness report chart"></canvas>
+                <p id="chartEmptyMessage" class="chart-empty" hidden>No saved data yet. Add data in Check-In or Food Diary first.</p>
             </div>
 
         </div> 
@@ -81,9 +81,10 @@
     <footer class="main-footer">
     </footer>
 
-</body>
 <script src="../Global/Header/header.js"></script>
 <script src="../Global/Navbar/navbar.js"></script>
 <script>createNavFromCharts();</script>
 <script src="../Global/Footer/footer.js"></script>
+<script src="Charts.js"></script>
+</body>
 </html>

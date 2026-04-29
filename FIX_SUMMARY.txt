@@ -1,0 +1,33 @@
+FIX SUMMARY
+
+Main fixes made:
+1. Added Charts/Charts.js with a working canvas chart system.
+   - Supports Weight, Steps, Calories Goal, and Water Intake.
+   - Uses data saved in localStorage from Check-In, Food Diary, and dashboard pages.
+   - Supports period filters: 7, 30, 90, 180, and 365 days.
+   - Added CSV export for the currently selected report.
+
+2. Fixed broken/missing file links:
+   - index/index.html CSS paths fixed.
+   - Check_In/Check-In.html CSS and JS paths fixed.
+   - Food-Diary/Food-Diary.html now links to Food-Diary.js.
+   - Profile/Profile.html now links to Profile.js with correct case.
+   - Login/Login.html now links to Login.js.
+
+3. Added Food-Diary/Food-Diary.js:
+   - Date navigation works.
+   - Water quick-add/custom-add works.
+   - Food notes save to localStorage.
+   - Water data can now appear in Charts.
+
+4. Improved shared header/navbar:
+   - Logo links back to home correctly from different folders.
+   - Logout clears logged-in state and links to Login.
+   - Navbar highlights the current page.
+
+5. Fixed compatibility problems:
+   - Removed bad backslash paths.
+   - Fixed case-sensitive script filename issues.
+   - Moved page scripts into valid body positions where needed.
+   - Checked all JavaScript files with node --check.
+   - Checked active HTML href/src references for missing files.
