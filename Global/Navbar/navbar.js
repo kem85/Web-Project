@@ -18,14 +18,14 @@ function setNavItems(items) {
 function createNavFromIndex() {
   setNavItems([
     { label: "My Home", href: "index.html", active: true },
-    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Check in", href: "../Check-In/Check-In.html" },
     { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
     { label: "Charts", href: "../Charts/Charts.html" },
     { label: "Profile", href: "../Profile/Profile.html" },
   ]);
 }
 
-// Navigation for Check_In page
+// Navigation for Check-In page
 function createNavFromCheckIn() {
   setNavItems([
     { label: "My Home", href: "../index/index.html" },
@@ -40,7 +40,7 @@ function createNavFromCheckIn() {
 function createNavFromFoodDiary() {
   setNavItems([
     { label: "My Home", href: "../index/index.html" },
-    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Check in", href: "../Check-In/Check-In.html" },
     { label: "Food Diary", href: "Food-Diary.html", active: true },
     { label: "Charts", href: "../Charts/Charts.html" },
     { label: "Profile", href: "../Profile/Profile.html" },
@@ -51,7 +51,7 @@ function createNavFromFoodDiary() {
 function createNavFromCharts() {
   setNavItems([
     { label: "My Home", href: "../index/index.html" },
-    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Check in", href: "../Check-In/Check-In.html" },
     { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
     { label: "Charts", href: "Charts.html", active: true },
     { label: "Profile", href: "../Profile/Profile.html" },
@@ -62,7 +62,7 @@ function createNavFromCharts() {
 function createNavFromProfile() {
   setNavItems([
     { label: "My Home", href: "../index/index.html" },
-    { label: "Check in", href: "../Check_In/Check-In.html" },
+    { label: "Check in", href: "../Check-In/Check-In.html" },
     { label: "Food Diary", href: "../Food-Diary/Food-Diary.html" },
     { label: "Charts", href: "../Charts/Charts.html" },
     { label: "Profile", href: "Profile.html", active: true },

@@ -32,6 +32,14 @@ function init() {
   let state = loadState();
   renderProfile(state);
 
+  if (new URLSearchParams(window.location.search).get('open') === 'edit') {
+    openEditModal(state, (updated) => {
+      state = updated;
+      saveState(state);
+      renderProfile(state);
+    });
+  }
+
   // Edit Profile button
   document.getElementById('btn1').addEventListener('click', () => openEditModal(state, (updated) => {
     state = updated;

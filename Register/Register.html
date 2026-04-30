@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFitnessPal - Health Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="Register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- LEFT SIDE: UNCHANGED -->
+        <section class="hero-side">
+            <div class="logo-content">
+                <img src="MyFitnessPal_idQ5oDjzda_0.jpeg" alt="MyFitnessPal Icon" class="hero-icon">
+                <h1>myfitnesspal</h1>
+            </div>
+        </section>
+
+        <!-- RIGHT SIDE: NOW ASKS FOR AGE, HEIGHT, GENDER -->
+        <section class="form-side">
+            <div class="form-wrapper">
+                <h2>Tell us about yourself</h2>
+                <div class="subhead">We’ll personalize your experience</div>
+
+                <form id="healthForm">
+                    <!-- Age -->
+                    <div class="input-group">
+                        <label for="age">Age <span style="color:#0066ee;">(years)</span></label>
+                        <input type="number" id="age" name="age" placeholder="e.g., 28" min="1" max="120" required>
+                    </div>
+
+                    <!-- Height -->
+                    <div class="input-group">
+                        <label for="height">Height <span style="color:#0066ee;">(cm)</span></label>
+                        <input type="number" id="height" name="height" placeholder="e.g., 175" step="1" min="50" max="300" required>
+                    </div>
+
+                    <!-- Gender -->
+                    <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="radio" name="gender" value="female" required> Female
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="radio" name="gender" value="male" required> Male
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="submitBtn">Save Profile</button>
+                </form>
+
+                <div class="divider">
+                    <span class="divider-text">we keep your data private</span>
+                </div>
+
+                <p class="footer-text" style="margin-top: 0;">
+                    <i class="fa-regular fa-heart" style="color:#0066ee;"></i> Your health, your way
+                </p>
+            </div>
+        </section>
+    </div>
+    <script src="Register.js"></script>
+</body>
+</html>
