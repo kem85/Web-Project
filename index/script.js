@@ -1,12 +1,23 @@
-const STORAGE_KEYS = {
-  nutrition: "fitnessTrackerNutrition",
-  checkIn: "fitnessTrackerCheckIn",
-  profile: "ft_profile",
-  credentials: "ft_credentials",
-};
+const data = window.userData;
+function getMyCalories() {
+  const user = window.userData;
+  const W = parseFloat(user.weight) || 70; // Weight
+  const H = parseFloat(user.height) || 170; // Height
+  const A = parseInt(user.age) || 25;       // Age
+  const gender = user.gender.toLowerCase();
 
+  // 3. The Math from your image (Mifflin-St Jeor)
+  let bmr = (10 * W) + (6.25 * H) - (5 * A);
+
+  if (gender === 'male' || gender === 'man') {
+    bmr = bmr + 5; // Formula for men
+  } else {
+    bmr = bmr - 161; // Formula for women
+  }
+  return Math.round(bmr);
+}
 const DEFAULT_STATE = {
-  calories: 1930,
+  calories: getMyCalories(),
   carbsPercent: 50,
   fatPercent: 30,
   proteinPercent: 20,
@@ -14,55 +25,22 @@ const DEFAULT_STATE = {
   exerciseCalories: 0,
 };
 
-function safeParse(key) {
-  try {
-    const rawValue = localStorage.getItem(key);
-    return rawValue ? JSON.parse(rawValue) : null;
-  } catch (error) {
-    console.error(`Failed to parse localStorage key: ${key}`, error);
-    return null;
-  }
-}
-
 function roundValue(value) {
   return Math.round(value);
 }
 
 function loadNutritionState() {
-  const savedState = safeParse(STORAGE_KEYS.nutrition);
-  const mergedState = { ...DEFAULT_STATE, ...savedState };
-
-  if (getTotalPercent(mergedState) > 100) {
-    return { ...DEFAULT_STATE };
-  }
-
-  return mergedState;
-}
-
-function saveNutritionState(state) {
-  localStorage.setItem(STORAGE_KEYS.nutrition, JSON.stringify(state));
+  return { ...DEFAULT_STATE };
 }
 
 function getCheckInSummary() {
-  const checkInData = safeParse(STORAGE_KEYS.checkIn);
-
-  if (!checkInData || !checkInData.date) {
-    return { streak: 1 };
-  }
-
-  const today = new Date().toISOString().split("T")[0];
-  return {
-    streak: checkInData.date === today ? 2 : 1,
-  };
+  return { streak: 1 };
 }
 
 function getProfileSummary() {
-  const profile = safeParse(STORAGE_KEYS.profile) || {};
-  const credentials = safeParse(STORAGE_KEYS.credentials) || {};
-
   return {
-    username: profile.name || credentials.name || "User",
-    photo: profile.photoDataUrl || "../Profile/muslim cat.jpg",
+    username: "User",
+    photo: "/Profile/muslim_cat.jpg",
   };
 }
 
@@ -182,7 +160,6 @@ function initDashboard() {
   updateMacroTable(state, elements);
   updateCaloriesCard(state, elements);
   updateHeaderContent();
-  saveNutritionState(state);
 
   const handlePercentChange = (event) => {
     const nextState = {
@@ -205,7 +182,6 @@ function initDashboard() {
 
     syncSelectValues(state, elements);
     updateMacroTable(state, elements);
-    saveNutritionState(state);
   };
 
   elements.carbPercent.addEventListener("change", handlePercentChange);

@@ -1,27 +1,18 @@
-function readJSON(key, fallback = null) {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch (error) {
-    console.error(`Failed to read ${key}`, error);
-    return fallback;
-  }
-}
+let settingsState = {
+  name: '',
+  age: '',
+  gender: 'Male',
+  aboutMe: '',
+  whyShape: '',
+  inspirations: '',
+};
 
 function loadSettingsState() {
-  const saved = readJSON('ft_profile', null);
-  return saved || {
-    name: '',
-    age: '',
-    gender: 'Male',
-    aboutMe: '',
-    whyShape: '',
-    inspirations: '',
-  };
+  return { ...settingsState };
 }
 
 function saveSettingsState(state) {
-  localStorage.setItem('ft_profile', JSON.stringify(state));
+  settingsState = { ...state };
 }
 
 function initSettingsPage() {

@@ -4,10 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fitness Tracker VY</title>
-    <script>
-      // This creates a global variable that your external JS file can see
-      window.dbUsername = "{{ username }}";
-    </script>
+<script>
+    window.userData = {
+        username: "{{ username }}",
+        age: "{{ age }}",
+        height: "{{ height }}",
+        gender: "{{ gender }}"
+    };
+</script>
+<script>
+    // Flask injects the value here when the page renders
+    window.dbUsername = "{{ username }}";
+</script>
     <!-- Corrected absolute paths for Flask -->
     <link rel="stylesheet" href="/index/style.css" />
     <link rel="stylesheet" href="/Global/Header/header.css" />
@@ -21,7 +29,6 @@
 
     <!-- NAVBAR (Populated by navbar.js) -->
     <nav class="navbar"></nav>
-
     <!-- PAGE TITLE -->
     <section class="page-title">
       <div class="title-left">

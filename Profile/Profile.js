@@ -18,13 +18,14 @@ const DEFAULTS = {
   friends:     [],   // [{ id, name, since }]
 };
 
+let profileState = { ...DEFAULTS };
+
 function loadState() {
-  const saved = localStorage.getItem('ft_profile');
-  return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : { ...DEFAULTS };
+  return { ...profileState };
 }
 
 function saveState(state) {
-  localStorage.setItem('ft_profile', JSON.stringify(state));
+  profileState = { ...state };
 }
 
 // ── Init ──────────────────────────────────────
@@ -202,7 +203,7 @@ function renderFriends(state) {
     removeBtn.addEventListener('mouseenter', () => removeBtn.style.color = '#e53935');
     removeBtn.addEventListener('mouseleave', () => removeBtn.style.color = '#999');
     removeBtn.addEventListener('click', () => {
-      // Load fresh state from localStorage so we don't use a stale closure
+      // Load fresh state
       const fresh = loadState();
       fresh.friends = (fresh.friends || []).filter(f => f.id !== friend.id);
       saveState(fresh);
@@ -268,7 +269,7 @@ function openAddFriendModal(state, onSave) {
       return;
     }
 
-    // Always load fresh from localStorage — prevents stale closure after removals
+    // Always load fresh state
     const freshState = loadState();
     const friends    = freshState.friends || [];
 

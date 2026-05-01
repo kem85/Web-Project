@@ -1,9 +1,3 @@
-const STORAGE_KEYS = {
-  checkIn: "fitnessTrackerCheckIn",
-  nutrition: "fitnessTrackerNutrition",
-  foodDiary: "fitnessTrackerFoodDiary",
-};
-
 const REPORTS = {
   weight: { label: "Weight", unit: "kg", type: "line" },
   steps: { label: "Steps", unit: "steps", type: "bar" },
@@ -14,16 +8,6 @@ const REPORTS = {
 let currentReport = "weight";
 let currentDays = 7;
 let currentRows = [];
-
-function safeParse(key, fallback = null) {
-  try {
-    const rawValue = localStorage.getItem(key);
-    return rawValue ? JSON.parse(rawValue) : fallback;
-  } catch (error) {
-    console.error(`Could not read ${key} from localStorage`, error);
-    return fallback;
-  }
-}
 
 function toNumber(value) {
   const numberValue = Number(value);
@@ -53,43 +37,15 @@ function filterByPeriod(rows, days) {
 }
 
 function getCheckInRows(metric) {
-  const data = safeParse(STORAGE_KEYS.checkIn, {});
-  const rowsByDate = new Map();
-
-  if (Array.isArray(data.history)) {
-    data.history.forEach((entry) => {
-      if (!entry || !entry.date) return;
-      const value = toNumber(entry[metric]);
-      if (value !== null) {
-        rowsByDate.set(entry.date, { date: entry.date, value });
-      }
-    });
-  }
-
-  [data.previousEntry, data.currentEntry, data].forEach((entry) => {
-    if (!entry || !entry.date) return;
-    const value = toNumber(entry[metric]);
-    if (value !== null) {
-      rowsByDate.set(entry.date, { date: entry.date, value });
-    }
-  });
-
-  return [...rowsByDate.values()];
+  return [];
 }
 
 function getCaloriesRows() {
-  const nutrition = safeParse(STORAGE_KEYS.nutrition, {});
-  const goal = toNumber(nutrition.calories ?? 1930);
-  if (goal === null) return [];
-  return [{ date: todayISO(), value: goal }];
+  return [{ date: todayISO(), value: 1930 }];
 }
 
 function getWaterRows() {
-  const diary = safeParse(STORAGE_KEYS.foodDiary, {});
-  const waterByDate = diary.waterByDate || {};
-  return Object.entries(waterByDate)
-    .map(([date, value]) => ({ date, value: toNumber(value) }))
-    .filter((row) => row.value !== null);
+  return [];
 }
 
 function getRowsForReport(reportKey) {

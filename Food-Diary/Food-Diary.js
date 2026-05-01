@@ -1,17 +1,11 @@
-const FOOD_DIARY_STORAGE_KEY = "fitnessTrackerFoodDiary";
+let foodDiaryData = { waterByDate: {}, notesByDate: {} };
 
 function safeParseFoodDiary() {
-  try {
-    const rawValue = localStorage.getItem(FOOD_DIARY_STORAGE_KEY);
-    return rawValue ? JSON.parse(rawValue) : { waterByDate: {}, notesByDate: {} };
-  } catch (error) {
-    console.error("Failed to read food diary data", error);
-    return { waterByDate: {}, notesByDate: {} };
-  }
+  return { ...foodDiaryData };
 }
 
 function saveFoodDiary(data) {
-  localStorage.setItem(FOOD_DIARY_STORAGE_KEY, JSON.stringify(data));
+  foodDiaryData = { ...data };
 }
 
 function getTodayDate() {

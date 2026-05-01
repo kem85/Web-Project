@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS myfitnesspal_db;
+
 USE myfitnesspal_db;
 
 -- Table to store user profiles
@@ -9,7 +10,6 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     calories_goal INT,
     current_weight FLOAT,
-    goal_weight FLOAT,
     height FLOAT,
     age INT NOT NULL,
     gender VARCHAR(10) NOT NULL,
@@ -32,9 +32,8 @@ CREATE TABLE food_entries (
     sodium INT,
     sugar INT,
     date_added DATE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE charts_report (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,5 +43,5 @@ CREATE TABLE charts_report (
     calories INT,
     water_intake INT,
     date_added DATE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
