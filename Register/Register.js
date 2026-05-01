@@ -227,7 +227,7 @@
             signupBtn.textContent = '✓ Account created!';
             showToast('Account created successfully!');
             setTimeout(() => {
-                window.location.href = '../index/index.html';
+                window.location.href = '/';
             }, 800);
         }, 700);
     });

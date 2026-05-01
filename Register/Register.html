@@ -1,91 +1,142 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - MyFitnessPal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="Register.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/Register/Register.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="login-container">
-        <section class="hero-side">
-            <div class="logo-content">
-                <img src="MyFitnessPal_idQ5oDjzda_0.jpeg" alt="MyFitnessPal Icon" class="hero-icon">
-                <h1>myfitnesspal</h1>
+      <section class="hero-side">
+        <div class="logo-content">
+          <img
+            src="/Register/MyFitnessPal_idQ5oDjzda_0.jpeg"
+            alt="MyFitnessPal Icon"
+            class="hero-icon"
+          />
+          <h1>myfitnesspal</h1>
+        </div>
+      </section>
+
+      <section class="form-side">
+        <div class="form-wrapper">
+          <h2>Create your account</h2>
+          <div class="subhead">
+            Register with a username, email, and secure password.
+          </div>
+
+          <!-- 1. Added method and action -->
+          <form id="registerForm" method="POST" action="/signup">
+            <div class="input-group">
+              <label for="username">Username</label>
+              <!-- 2. Added name="username" -->
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Choose a username"
+                required
+              />
             </div>
-        </section>
 
-        <section class="form-side">
-            <div class="form-wrapper">
-                <h2>Create your account</h2>
-                <div class="subhead">Register with a username, email, and secure password.</div>
-
-                <form id="registerForm">
-                    <div class="input-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="Choose a username" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="age">Age</label>
-                        <input type="number" id="age" placeholder="Age" min="1" max="120" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" required>
-                            <option value="" disabled selected>Select gender</option>
-                            <option value="female">Female</option>
-                            <option value="male">Male</option>
-                            <option value="non-binary">Non-binary</option>
-                            <option value="prefer-not-to-say">Prefer not to say</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="height">Height (cm)</label>
-                        <input type="number" id="height" placeholder="Height in cm" min="50" max="300" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="Email address" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="confirmEmail">Confirm Email</label>
-                        <input type="email" id="confirmEmail" placeholder="Confirm email address" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="password" placeholder="Password" required>
-                            <i class="fa-regular fa-eye-slash toggle-password" id="eyeIcon"></i>
-                        </div>
-                    </div>
-
-                    <div class="caps-warning" id="capsWarning">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Caps Lock is on
-                    </div>
-
-                    <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
-                    <div class="strength-label" id="strengthLabel">Password strength</div>
-
-                    <div class="input-group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" placeholder="Confirm password" required>
-                    </div>
-
-                    <button type="submit" class="btn-signup" id="signupBtn">Sign Up</button>
-                </form>
-
-                <p class="footer-text">Already have an account? <a href="../Login/Login.html">Log in</a></p>
+            <div class="input-group">
+              <label for="age">Age</label>
+              <!-- 3. Added name="age" -->
+              <input
+                type="number"
+                id="age"
+                name="age"
+                placeholder="Age"
+                min="1"
+                max="120"
+                required
+              />
             </div>
-        </section>
+
+            <div class="input-group">
+              <label for="gender">Gender</label>
+              <!-- 4. Added name="gender" -->
+              <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="height">Height (cm)</label>
+              <!-- 5. Added name="height" -->
+              <input
+                type="number"
+                id="height"
+                name="height"
+                placeholder="Height in cm"
+                min="50"
+                max="300"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="email">Email Address</label>
+              <!-- 6. Added name="email" -->
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email address"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="password">Password</label>
+              <div class="password-wrapper">
+                <!-- 7. Added name="password" -->
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+                <i
+                  class="fa-regular fa-eye-slash toggle-password"
+                  id="eyeIcon"
+                ></i>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn-signup" id="signupBtn">
+              Sign Up
+            </button>
+          </form>
+
+          <p class="footer-text">
+            Already have an account? <a href="/login">Log in</a>
+          </p>
+        </div>
+      </section>
     </div>
-    <script src="Register.js"></script>
-</body>
+    <script src="/Register/Register.js"></script>
+  </body>
 </html>

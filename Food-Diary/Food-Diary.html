@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <title>Fitness Tracker VY</title>
-
-    <link rel="stylesheet" href="Food-Diary.css" />
-    <link rel="stylesheet" href="../Global/Header/header.css">
-    <link rel="stylesheet" href="../Global/Navbar/navbar.css">
-    <link rel="stylesheet" href="../Global/Footer/footer.css">
+    <script>
+      window.dbUsername = "{{ username }}";
+    </script>
+    <link rel="stylesheet" href="/Food-Diary/Food-Diary.css" />
+    <link rel="stylesheet" href="/Global/Header/header.css" />
+    <link rel="stylesheet" href="/Global/Navbar/navbar.css" />
+    <link rel="stylesheet" href="/Global/Footer/footer.css" />
   </head>
 
   <body>
@@ -15,7 +17,7 @@
 
     <header class="header">
       <!-- <div class="logo">
-        <h1><a href="index.html">myfitnesspal</a></h1>
+        <h1><a href="/">myfitnesspal</a></h1>
       </div>
 
       <div class="user-section">
@@ -29,16 +31,15 @@
 
     <!-- NAVBAR -->
 
-   <nav class="navbar">
-
-            <!-- <ul>
-                <li><a href="index.html">My Home</a></li>
-                <li><a href="Check-In.html">Check in</a></li>
-                <li><a href="Food-Diary.html">Food Diary</a></li>
-                <li><a href="Charts.html">Charts</a></li>
-                <li><a href="Profile.html">Profile</a></li>
+    <nav class="navbar">
+      <!-- <ul>
+                <li><a href="/">My Home</a></li>
+                <li><a href="/check_in">Check in</a></li>
+                <li><a href="/food_diary">Food Diary</a></li>
+                <li><a href="/charts">Charts</a></li>
+                <li><a href="/profile">Profile</a></li>
             </ul> -->
-        </nav>
+    </nav>
 
     <main class="diary-container">
       <header class="diary-header">
@@ -241,10 +242,12 @@
       </div>
       <div class="footer-copyright">© 2026 MyFitnessPal, Inc.</div> -->
     </footer>
-  <script src="../Global/Header/header.js"></script>
-  <script src="../Global/Navbar/navbar.js"></script>
-  <script>createNavFromFoodDiary();</script>
-  <script src="../Global/Footer/footer.js"></script>
-  <script src="Food-Diary.js"></script>
+    <script src="/Global/Header/header.js"></script>
+    <script src="/Global/Navbar/navbar.js"></script>
+    <script>
+      createNavFromFoodDiary();
+    </script>
+    <script src="/Global/Footer/footer.js"></script>
+    <script src="/Food-Diary/Food-Diary.js"></script>
   </body>
 </html>

@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <title>Check In</title>
-
-    <link rel="stylesheet" href="style_checkin_main.css" />
-    <link rel="stylesheet" href="../Global/Header/header.css">
-    <link rel="stylesheet" href="../Global/Navbar/navbar.css">
-    <link rel="stylesheet" href="../Global/Footer/footer.css">
+    <script>
+      window.dbUsername = "{{ username }}";
+    </script>
+    <link rel="stylesheet" href="/Check-In/style_checkin_main.css" />
+    <link rel="stylesheet" href="/Global/Header/header.css" />
+    <link rel="stylesheet" href="/Global/Navbar/navbar.css" />
+    <link rel="stylesheet" href="/Global/Footer/footer.css" />
   </head>
 
   <body>
@@ -15,7 +17,7 @@
 
     <header class="header">
       <!-- <div class="logo">
-        <h1><a href="index.html">myfitnesspal</a></h1>
+        <h1><a href="/">myfitnesspal</a></h1>
       </div>
 
       <div class="user-section">
@@ -99,10 +101,12 @@
         </div> -->
     </footer>
 
-    <script src="../Global/Header/header.js"></script>
-    <script src="../Global/Navbar/navbar.js"></script>
-    <script>createNavFromCheckIn();</script>
-    <script src="../Global/Footer/footer.js"></script>
-    <script src="Check-in.js"></script>
+    <script src="/Global/Header/header.js"></script>
+    <script src="/Global/Navbar/navbar.js"></script>
+    <script>
+      createNavFromCheckIn();
+    </script>
+    <script src="/Global/Footer/footer.js"></script>
+    <script src="/Check-In/Check-in.js"></script>
   </body>
 </html>

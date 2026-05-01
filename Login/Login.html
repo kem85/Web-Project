@@ -1,77 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - MyFitnessPal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="Login.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/Login/Login.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="login-container">
-        <section class="hero-side">
-            <div class="logo-content">
-                <img src="MyFitnessPal_idQ5oDjzda_0.jpeg" alt="MyFitnessPal Icon" class="hero-icon">
-                <h1>myfitnesspal</h1>
+      <section class="hero-side">
+        <div class="logo-content">
+          <img
+            src="/Login/MyFitnessPal_idQ5oDjzda_0.jpeg"
+            alt="MyFitnessPal Icon"
+            class="hero-icon"
+          />
+          <h1>myfitnesspal</h1>
+        </div>
+      </section>
+
+      <section class="form-side">
+        <div class="form-wrapper">
+          <h2>Member Login</h2>
+
+          <form id="loginForm" action="/login" method="POST">
+            <div class="input-group">
+              <label for="email">Email Address</label>
+              <!-- Add name="email" here -->
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                required
+              />
             </div>
-        </section>
 
-        <section class="form-side">
-            <div class="form-wrapper">
-                <h2>Member Login</h2>
-                
-                <form id="loginForm">
-                    <div class="input-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="Email" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="password" placeholder="Password" required>
-                            <i class="fa-regular fa-eye-slash toggle-password" id="eyeIcon"></i>
-                        </div>
-                    </div>
-
-                    <div class="captcha-box">
-                        <div class="captcha-left">
-                            <div class="success-circle">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <span>Success!</span>
-                        </div>
-                        <div class="captcha-right">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Cloudflare_Logo.svg" alt="Cloudflare" width="55">
-                            <div class="captcha-links">Privacy • Help</div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-login">Log In</button>
-                </form>
-
-                <div class="divider">
-                    <span class="divider-text">or</span>
-                </div>
-
-                <div class="social-buttons">
-                    <button class="btn-social">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="18">
-                        Continue with Google
-                    </button>
-                    <button class="btn-social">
-                        <i class="fa-brands fa-square-facebook facebook-icon"></i>
-                        Continue with Facebook
-                    </button>
-                </div>
-
-                <p class="footer-text">
-                    Not a member yet? <a href="../Register/Register.html">Sign up now!</a>
-                </p>
+            <div class="input-group">
+              <label for="password">Password</label>
+              <div class="password-wrapper">
+                <!-- Add name="password" here -->
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+                <i
+                  class="fa-regular fa-eye-slash toggle-password"
+                  id="eyeIcon"
+                ></i>
+              </div>
             </div>
-        </section>
+
+            <div class="captcha-box">
+              <div class="captcha-left">
+                <div class="success-circle">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <span>Success!</span>
+              </div>
+              <div class="captcha-right">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Cloudflare_Logo.svg"
+                  alt="Cloudflare"
+                  width="55"
+                />
+                <div class="captcha-links">Privacy • Help</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-login">Log In</button>
+          </form>
+
+          <div class="divider">
+            <span class="divider-text">or</span>
+          </div>
+
+          <div class="social-buttons">
+            <button class="btn-social">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                alt="Google"
+                width="18"
+              />
+              Continue with Google
+            </button>
+            <button class="btn-social">
+              <i class="fa-brands fa-square-facebook facebook-icon"></i>
+              Continue with Facebook
+            </button>
+          </div>
+
+          <p class="footer-text">
+            Not a member yet? <a href="/signup">Sign up now!</a>
+          </p>
+        </div>
+      </section>
     </div>
-    <script src="Login.js"></script>
-</body>
+    <script src="/Login/Login.js"></script>
+  </body>
 </html>

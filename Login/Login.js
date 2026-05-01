@@ -3,7 +3,7 @@
 // =============================================
 
 // ── Inject styles ─────────────────────────────
-const style = document.createElement('style');
+const style = document.createElement("style");
 style.textContent = `
   .input-group.error   { outline: 2px solid #e53935; border-radius: 10px; }
   .input-group.success { outline: 2px solid #28a745; border-radius: 10px; }
@@ -69,45 +69,44 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ── DOM refs ──────────────────────────────────
-const loginForm  = document.getElementById('loginForm');
-const emailInput = document.getElementById('email');
-const passInput  = document.getElementById('password');
-const loginBtn   = loginForm.querySelector('.btn-login');
-const eyeIcon = document.getElementById('eyeIcon');
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passInput = document.getElementById("password");
+const loginBtn = loginForm.querySelector(".btn-login");
+const eyeIcon = document.getElementById("eyeIcon");
 
 if (eyeIcon) {
-  eyeIcon.addEventListener('click', () => {
-    const isPassword = passInput.getAttribute('type') === 'password';
-    passInput.setAttribute('type', isPassword ? 'text' : 'password');
-    eyeIcon.classList.toggle('fa-eye');
-    eyeIcon.classList.toggle('fa-eye-slash');
+  eyeIcon.addEventListener("click", () => {
+    const isPassword = passInput.getAttribute("type") === "password";
+    passInput.setAttribute("type", isPassword ? "text" : "password");
+    eyeIcon.classList.toggle("fa-eye");
+    eyeIcon.classList.toggle("fa-eye-slash");
   });
 }
 
-loginForm.classList.add('form-panel');
-loginForm.id = 'loginPanel';
+loginForm.classList.add("form-panel");
+loginForm.id = "loginPanel";
 
 // ═══════════════════════════════════════════════
 //  INJECT: Caps Lock warning
 // ═══════════════════════════════════════════════
-const capsWarn = document.createElement('div');
-capsWarn.className = 'caps-warning';
+const capsWarn = document.createElement("div");
+capsWarn.className = "caps-warning";
 capsWarn.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Caps Lock is on`;
-passInput.closest('.input-group').insertAdjacentElement('afterend', capsWarn);
+passInput.closest(".input-group").insertAdjacentElement("afterend", capsWarn);
 
-['keyup', 'keydown'].forEach(evt =>
+["keyup", "keydown"].forEach((evt) =>
   passInput.addEventListener(evt, (e) =>
-    capsWarn.classList.toggle('visible', e.getModifierState('CapsLock'))
-  )
+    capsWarn.classList.toggle("visible", e.getModifierState("CapsLock")),
+  ),
 );
 
 // ═══════════════════════════════════════════════
 //  INJECT: Lockout banner
 // ═══════════════════════════════════════════════
-const lockoutBanner = document.createElement('div');
-lockoutBanner.className = 'lockout-banner';
-loginBtn.insertAdjacentElement('beforebegin', lockoutBanner);
-
+const lockoutBanner = document.createElement("div");
+lockoutBanner.className = "lockout-banner";
+loginBtn.insertAdjacentElement("beforebegin", lockoutBanner);
 
 // ═══════════════════════════════════════════════
 //  FAILED ATTEMPTS LOCKOUT
@@ -115,8 +114,8 @@ loginBtn.insertAdjacentElement('beforebegin', lockoutBanner);
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_SECS = 30;
 let failedAttempts = 0;
-let lockoutUntil   = 0;
-let lockoutTimer   = null;
+let lockoutUntil = 0;
+let lockoutTimer = null;
 
 const isLockedOut = () => Date.now() < lockoutUntil;
 
@@ -128,15 +127,14 @@ function startLockoutCountdown() {
     const remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
     if (remaining <= 0) {
       clearInterval(lockoutTimer);
-      lockoutBanner.classList.remove('visible');
-      loginBtn.disabled    = false;
-      loginBtn.textContent = 'Log In';
+      lockoutBanner.classList.remove("visible");
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Log In";
       failedAttempts = 0;
       lockoutUntil = 0;
     } else {
-      lockoutBanner.classList.add('visible');
-      lockoutBanner.textContent =
-        `Too many failed attempts. Please wait ${remaining}s before trying again.`;
+      lockoutBanner.classList.add("visible");
+      lockoutBanner.textContent = `Too many failed attempts. Please wait ${remaining}s before trying again.`;
     }
   }, 500);
 }
@@ -152,113 +150,138 @@ function recordFailure() {
 }
 
 function clearFailures() {
-  failedAttempts = 0; lockoutUntil = 0;
+  failedAttempts = 0;
+  lockoutUntil = 0;
   clearInterval(lockoutTimer);
-  lockoutBanner.classList.remove('visible');
+  lockoutBanner.classList.remove("visible");
 }
 
 // ═══════════════════════════════════════════════
 //  SHARED HELPERS
 // ═══════════════════════════════════════════════
-const getGroup     = (input) => input.closest('.input-group');
-const isValidEmail = (v)     => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const getGroup = (input) => input.closest(".input-group");
+const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
 function setError(input, message) {
   const group = getGroup(input);
-  group.classList.add('error');
-  group.classList.remove('success');
+  group.classList.add("error");
+  group.classList.remove("success");
   const existing = group.nextElementSibling;
-  if (existing && existing.classList.contains('error-msg')) existing.remove();
+  if (existing && existing.classList.contains("error-msg")) existing.remove();
   if (message.trim()) {
-    const msg = document.createElement('p');
-    msg.className = 'error-msg';
+    const msg = document.createElement("p");
+    msg.className = "error-msg";
     msg.textContent = message;
-    group.insertAdjacentElement('afterend', msg);
+    group.insertAdjacentElement("afterend", msg);
   }
-  group.classList.remove('shake');
+  group.classList.remove("shake");
   void group.offsetWidth;
-  group.classList.add('shake');
-  group.addEventListener('animationend', () => group.classList.remove('shake'), { once: true });
+  group.classList.add("shake");
+  group.addEventListener(
+    "animationend",
+    () => group.classList.remove("shake"),
+    { once: true },
+  );
 }
 
 function clearError(input) {
   const group = getGroup(input);
-  group.classList.remove('error');
+  group.classList.remove("error");
   const next = group.nextElementSibling;
-  if (next && next.classList.contains('error-msg')) next.remove();
+  if (next && next.classList.contains("error-msg")) next.remove();
 }
 
 function setSuccess(input) {
   const group = getGroup(input);
-  group.classList.remove('error');
-  group.classList.add('success');
+  group.classList.remove("error");
+  group.classList.add("success");
   const next = group.nextElementSibling;
-  if (next && next.classList.contains('error-msg')) next.remove();
+  if (next && next.classList.contains("error-msg")) next.remove();
 }
 
 function showToast(message, duration = 3000) {
-  const old = document.querySelector('.ft-toast');
+  const old = document.querySelector(".ft-toast");
   if (old) old.remove();
-  const toast = document.createElement('div');
-  toast.className = 'ft-toast';
+  const toast = document.createElement("div");
+  toast.className = "ft-toast";
   toast.textContent = message;
   document.body.appendChild(toast);
-  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => toast.classList.add("show")),
+  );
   setTimeout(() => {
-    toast.classList.remove('show');
-    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    toast.classList.remove("show");
+    toast.addEventListener("transitionend", () => toast.remove(), {
+      once: true,
+    });
   }, duration);
 }
 
 // ═══════════════════════════════════════════════
 //  LOGIN — validation & submit
 // ═══════════════════════════════════════════════
-emailInput.addEventListener('blur', () => {
+emailInput.addEventListener("blur", () => {
   const v = emailInput.value.trim();
-  if (!v)                setError(emailInput, 'Email is required.');
-  else if (!isValidEmail(v)) setError(emailInput, 'Please enter a valid email address.');
-  else                   setSuccess(emailInput);
+  if (!v) setError(emailInput, "Email is required.");
+  else if (!isValidEmail(v))
+    setError(emailInput, "Please enter a valid email address.");
+  else setSuccess(emailInput);
 });
-passInput.addEventListener('blur', () => {
+passInput.addEventListener("blur", () => {
   const v = passInput.value;
-  if (!v)           setError(passInput, 'Password is required.');
-  else if (v.length < 6) setError(passInput, 'Password must be at least 6 characters.');
-  else              setSuccess(passInput);
+  if (!v) setError(passInput, "Password is required.");
+  else if (v.length < 6)
+    setError(passInput, "Password must be at least 6 characters.");
+  else setSuccess(passInput);
 });
-emailInput.addEventListener('input', () => clearError(emailInput));
-passInput.addEventListener('input',  () => clearError(passInput));
+emailInput.addEventListener("input", () => clearError(emailInput));
+passInput.addEventListener("input", () => clearError(passInput));
 
-loginForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault(); // Stop default to check validation
   if (isLockedOut()) return;
 
-  const email    = emailInput.value.trim();
+  const email = emailInput.value.trim();
   const password = passInput.value;
   let valid = true;
 
-  if (!email)                { setError(emailInput, 'Email is required.');               valid = false; }
-  else if (!isValidEmail(email)) { setError(emailInput, 'Please enter a valid email address.'); valid = false; }
-  if (!password)             { setError(passInput,  'Password is required.');             valid = false; }
-  else if (password.length < 6)  { setError(passInput, 'Password must be at least 6 characters.'); valid = false; }
+  // Validation checks
+  if (!email) {
+    setError(emailInput, "Email is required.");
+    valid = false;
+  } else if (!isValidEmail(email)) {
+    setError(emailInput, "Valid email required.");
+    valid = false;
+  }
+
+  if (!password) {
+    setError(passInput, "Password is required.");
+    valid = false;
+  } else if (password.length < 6) {
+    setError(passInput, "Min 6 characters.");
+    valid = false;
+  }
+
   if (!valid) return;
 
-  loginBtn.disabled    = true;
-  loginBtn.textContent = 'Logging in…';
+  // Visual success state
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Logging in…";
 
+  // Delay slightly so user sees the "Logging in..." state, then submit to Flask
   setTimeout(() => {
-    // TODO: replace this with a backend authentication request.
-    loginBtn.textContent = '✓ Success!';
-    showToast('Logged in successfully!');
-    setTimeout(() => { window.location.href = '../index/index.html'; }, 600);
-  }, 900);
+    loginForm.submit();
+  }, 600);
 });
 
 // ═══════════════════════════════════════════════
 //  SOCIAL BUTTONS
 // ═══════════════════════════════════════════════
-document.querySelectorAll('.btn-social').forEach(btn =>
-  btn.addEventListener('click', () => showToast('Social login coming soon!'))
-);
+document
+  .querySelectorAll(".btn-social")
+  .forEach((btn) =>
+    btn.addEventListener("click", () => showToast("Social login coming soon!")),
+  );
 
 // ── Auto-focus ────────────────────────────────
 emailInput.focus();

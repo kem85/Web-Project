@@ -69,7 +69,7 @@ function initSettingsPage() {
   });
 
   cancelBtn.addEventListener('click', () => {
-    window.location.href = '../Profile/Profile.html';
+    window.location.href = '/profile';
   });
 }
 
