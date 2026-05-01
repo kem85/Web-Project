@@ -2,11 +2,6 @@
 //   LOGIN PAGE — Login.js
 // =============================================
 
-// ── 1. AUTO-REDIRECT IF ALREADY LOGGED IN ────
-if (localStorage.getItem('ft_loggedIn') === 'true') {
-  window.location.replace('../index/index.html');
-}
-
 // ── Inject styles ─────────────────────────────
 const style = document.createElement('style');
 style.textContent = `
@@ -27,15 +22,8 @@ style.textContent = `
   }
   .shake { animation: shake 0.4s ease; }
 
-  .btn-login:disabled, .btn-signup:disabled {
+  .btn-login:disabled {
     opacity: 0.75; cursor: not-allowed;
-  }
-  .btn-signup {
-    width: 100%; padding: 14px;
-    background-color: #0066ee; color: white;
-    border: none; border-radius: 8px;
-    font-size: 16px; font-weight: 700;
-    cursor: pointer; margin-bottom: 20px;
   }
 
   /* ── 2. CAPS LOCK WARNING ── */
@@ -66,26 +54,6 @@ style.textContent = `
   }
   .lockout-banner.visible { display: block; }
 
-  /* ── 5. SIGN UP FORM ── */
-  .form-panel.hidden { display: none; }
-
-  .strength-bar-wrap {
-    height: 4px; background: #e1e4e8;
-    border-radius: 4px; margin: 6px 0 4px; overflow: hidden;
-  }
-  .strength-bar {
-    height: 100%; width: 0%;
-    border-radius: 4px;
-    transition: width 0.3s ease, background 0.3s ease;
-  }
-  .strength-label { font-size: 11px; color: #6a737d; margin-bottom: 10px; }
-
-  .toggle-form-link {
-    color: #0066ee; cursor: pointer;
-    text-decoration: none; font-weight: 400;
-  }
-  .toggle-form-link:hover { text-decoration: underline; }
-
   /* Toast */
   .ft-toast {
     position: fixed; bottom: 30px; left: 50%;
@@ -106,7 +74,6 @@ const emailInput = document.getElementById('email');
 const passInput  = document.getElementById('password');
 const loginBtn   = loginForm.querySelector('.btn-login');
 const forgotLink = document.querySelector('.forgot-link');
-const footerText = document.querySelector('.footer-text');
 const eyeIcon = document.getElementById('eyeIcon');
 
 if (eyeIcon) {
@@ -120,24 +87,6 @@ if (eyeIcon) {
 
 loginForm.classList.add('form-panel');
 loginForm.id = 'loginPanel';
-
-// ═══════════════════════════════════════════════
-//  INJECT: Remember Me checkbox
-// ═══════════════════════════════════════════════
-const rememberRow = document.createElement('div');
-rememberRow.className = 'remember-row';
-rememberRow.innerHTML = `
-  <input type="checkbox" id="rememberMe">
-  <label for="rememberMe">Remember me</label>
-`;
-loginForm.querySelector('.forgot-container').insertAdjacentElement('afterend', rememberRow);
-const rememberCheckbox = document.getElementById('rememberMe');
-
-const rememberedEmail = localStorage.getItem('ft_rememberedEmail');
-if (rememberedEmail) {
-  emailInput.value         = rememberedEmail;
-  rememberCheckbox.checked = true;
-}
 
 // ═══════════════════════════════════════════════
 //  INJECT: Caps Lock warning
@@ -160,110 +109,14 @@ const lockoutBanner = document.createElement('div');
 lockoutBanner.className = 'lockout-banner';
 loginBtn.insertAdjacentElement('beforebegin', lockoutBanner);
 
-// ═══════════════════════════════════════════════
-//  INJECT: Sign Up form panel
-// ═══════════════════════════════════════════════
-const signupPanel = document.createElement('div');
-signupPanel.className = 'form-panel hidden';
-signupPanel.id = 'signupPanel';
-signupPanel.innerHTML = `
-  <h2>Create Account</h2>
-
-  <div class="input-group">
-    <label for="su_name">Full Name</label>
-    <input type="text" id="su_name" placeholder="Your name">
-  </div>
-
-  <div class="input-group">
-    <label for="su_email">Email Address</label>
-    <input type="email" id="su_email" placeholder="Email">
-  </div>
-
-  <div class="input-group">
-    <label for="su_pass">Password</label>
-    <div class="password-wrapper">
-      <input type="password" id="su_pass" placeholder="Password">
-      <i class="fa-regular fa-eye-slash toggle-password" id="su_eyeIcon"></i>
-    </div>
-  </div>
-  <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
-  <div class="strength-label" id="strengthLabel">Password strength</div>
-
-  <div class="input-group">
-    <label for="su_confirm">Confirm Password</label>
-    <input type="password" id="su_confirm" placeholder="Confirm password">
-  </div>
-
-  <button class="btn-signup" id="signupBtn">Sign Up</button>
-
-  <p class="footer-text">
-    Already a member? <a class="toggle-form-link" id="goToLogin">Log in</a>
-  </p>
-`;
-loginForm.insertAdjacentElement('afterend', signupPanel);
-
-// ── Sign up refs ──────────────────────────────
-const su_name    = document.getElementById('su_name');
-const su_email   = document.getElementById('su_email');
-const su_pass    = document.getElementById('su_pass');
-const su_confirm = document.getElementById('su_confirm');
-const signupBtn  = document.getElementById('signupBtn');
-const strengthBar   = document.getElementById('strengthBar');
-const strengthLabel = document.getElementById('strengthLabel');
-
-// Password visibility toggle for signup
-document.getElementById('su_eyeIcon').addEventListener('click', function () {
-  const isPass = su_pass.type === 'password';
-  su_pass.type = isPass ? 'text' : 'password';
-  this.classList.toggle('fa-eye');
-  this.classList.toggle('fa-eye-slash');
-});
-
-// Strength meter
-su_pass.addEventListener('input', () => {
-  const pw    = su_pass.value;
-  let score   = 0;
-  if (pw.length >= 8)           score++;
-  if (pw.length >= 12)          score++;
-  if (/[A-Z]/.test(pw))        score++;
-  if (/[0-9]/.test(pw))        score++;
-  if (/[^A-Za-z0-9]/.test(pw)) score++;
-
-  const pct    = pw.length === 0 ? 0 : Math.max(20, score * 20);
-  const colors = ['', '#e53935', '#e67e00', '#f9a825', '#43a047', '#1b5e20'];
-  const labels = ['', 'Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
-
-  strengthBar.style.width      = pct + '%';
-  strengthBar.style.background = colors[score] || '#e1e4e8';
-  strengthLabel.textContent    = pw.length ? labels[score] : 'Password strength';
-  strengthLabel.style.color    = colors[score] || '#6a737d';
-});
-
-// ═══════════════════════════════════════════════
-//  TOGGLE Login ↔ Sign Up
-// ═══════════════════════════════════════════════
-function showSignup() {
-  document.getElementById('loginPanel').classList.add('hidden');
-  signupPanel.classList.remove('hidden');
-  su_name.focus();
-}
-function showLogin() {
-  signupPanel.classList.add('hidden');
-  document.getElementById('loginPanel').classList.remove('hidden');
-  emailInput.focus();
-}
-
-footerText.innerHTML = `Not a member yet? <a class="toggle-form-link" id="goToSignup">Sign up now!</a>`;
-document.getElementById('goToSignup').addEventListener('click', showSignup);
-document.getElementById('goToLogin').addEventListener('click', showLogin);
 
 // ═══════════════════════════════════════════════
 //  FAILED ATTEMPTS LOCKOUT
 // ═══════════════════════════════════════════════
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_SECS = 30;
-let failedAttempts = parseInt(localStorage.getItem('ft_failedAttempts')) || 0;
-let lockoutUntil   = parseInt(localStorage.getItem('ft_lockoutUntil'))   || 0;
+let failedAttempts = 0;
+let lockoutUntil   = 0;
 let lockoutTimer   = null;
 
 const isLockedOut = () => Date.now() < lockoutUntil;
@@ -280,8 +133,7 @@ function startLockoutCountdown() {
       loginBtn.disabled    = false;
       loginBtn.textContent = 'Log In';
       failedAttempts = 0;
-      localStorage.removeItem('ft_failedAttempts');
-      localStorage.removeItem('ft_lockoutUntil');
+      lockoutUntil = 0;
     } else {
       lockoutBanner.classList.add('visible');
       lockoutBanner.textContent =
@@ -294,10 +146,8 @@ if (isLockedOut()) startLockoutCountdown();
 
 function recordFailure() {
   failedAttempts++;
-  localStorage.setItem('ft_failedAttempts', failedAttempts);
   if (failedAttempts >= MAX_ATTEMPTS) {
     lockoutUntil = Date.now() + LOCKOUT_SECS * 1000;
-    localStorage.setItem('ft_lockoutUntil', lockoutUntil);
     startLockoutCountdown();
   }
 }
@@ -305,8 +155,6 @@ function recordFailure() {
 function clearFailures() {
   failedAttempts = 0; lockoutUntil = 0;
   clearInterval(lockoutTimer);
-  localStorage.removeItem('ft_failedAttempts');
-  localStorage.removeItem('ft_lockoutUntil');
   lockoutBanner.classList.remove('visible');
 }
 
@@ -399,80 +247,10 @@ loginForm.addEventListener('submit', (e) => {
   loginBtn.textContent = 'Logging in…';
 
   setTimeout(() => {
-    const stored = localStorage.getItem('ft_credentials');
-    if (stored) {
-      const creds = JSON.parse(stored);
-      if (creds.email === email && creds.password === password) {
-        rememberCheckbox.checked
-          ? localStorage.setItem('ft_rememberedEmail', email)
-          : localStorage.removeItem('ft_rememberedEmail');
-        clearFailures();
-        localStorage.setItem('ft_loggedIn', 'true');
-        loginBtn.textContent = '✓ Success!';
-        setTimeout(() => { window.location.href = '../index/index.html'; }, 600);
-      } else {
-        loginBtn.disabled    = false;
-        loginBtn.textContent = 'Log In';
-        recordFailure();
-        if (!isLockedOut()) {
-          const left = MAX_ATTEMPTS - failedAttempts;
-          setError(emailInput, ' ');
-          setError(passInput, left > 0
-            ? `Incorrect email or password. ${left} attempt${left !== 1 ? 's' : ''} left.`
-            : 'Incorrect email or password.');
-        }
-      }
-    } else {
-      loginBtn.disabled    = false;
-      loginBtn.textContent = 'Log In';
-      setError(emailInput, 'No account found. Please sign up first.');
-    }
-  }, 900);
-});
-
-// ═══════════════════════════════════════════════
-//  SIGN UP — validation & submit
-// ═══════════════════════════════════════════════
-[su_name, su_email, su_pass, su_confirm].forEach(input =>
-  input.addEventListener('input', () => clearError(input))
-);
-
-su_email.addEventListener('blur', () => {
-  const v = su_email.value.trim();
-  if (!v)                setError(su_email, 'Email is required.');
-  else if (!isValidEmail(v)) setError(su_email, 'Please enter a valid email address.');
-  else                   setSuccess(su_email);
-});
-su_confirm.addEventListener('blur', () => {
-  if (su_confirm.value && su_confirm.value !== su_pass.value)
-    setError(su_confirm, 'Passwords do not match.');
-  else if (su_confirm.value)
-    setSuccess(su_confirm);
-});
-
-signupBtn.addEventListener('click', () => {
-  const name     = su_name.value.trim();
-  const email    = su_email.value.trim();
-  const password = su_pass.value;
-  const confirm  = su_confirm.value;
-  let valid = true;
-
-  if (!name)                 { setError(su_name,    'Name is required.');                     valid = false; }
-  if (!email)                { setError(su_email,   'Email is required.');                    valid = false; }
-  else if (!isValidEmail(email)) { setError(su_email,'Please enter a valid email address.');  valid = false; }
-  if (!password)             { setError(su_pass,    'Password is required.');                 valid = false; }
-  else if (password.length < 6)  { setError(su_pass,'Password must be at least 6 characters.'); valid = false; }
-  if (confirm !== password)  { setError(su_confirm, 'Passwords do not match.');               valid = false; }
-  if (!valid) return;
-
-  signupBtn.disabled    = true;
-  signupBtn.textContent = 'Creating account…';
-
-  setTimeout(() => {
-    localStorage.setItem('ft_credentials', JSON.stringify({ email, password, name }));
-    localStorage.setItem('ft_loggedIn', 'true');
-    signupBtn.textContent = '✓ Account created!';
-    setTimeout(() => { window.location.href = '../index/index.html'; }, 700);
+    // TODO: replace this with a backend authentication request.
+    loginBtn.textContent = '✓ Success!';
+    showToast('Logged in successfully!');
+    setTimeout(() => { window.location.href = '../index/index.html'; }, 600);
   }, 900);
 });
 

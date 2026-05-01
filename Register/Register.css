@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,7 +10,6 @@
     min-height: 100vh;
 }
 
-/* --- Hero Section (unchanged) --- */
 .hero-side {
     flex: 2.3;
     background: #0066ee;
@@ -21,7 +20,7 @@
 }
 
 .logo-content {
-    text-align:center;
+    text-align: center;
 }
 
 .hero-icon {
@@ -37,7 +36,6 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Form Section (right side) --- */
 .form-side {
     flex: 1;
     background: white;
@@ -67,12 +65,19 @@ h2 {
     padding-left: 12px;
 }
 
-/* Input group styling (kept exactly as original) */
 .input-group {
     background-color: #f0f3f8;
     border-radius: 10px;
     padding: 10px 16px;
     margin-bottom: 15px;
+}
+
+.input-group.error {
+    outline: 2px solid #e53935;
+}
+
+.input-group.success {
+    outline: 2px solid #28a745;
 }
 
 .input-group label {
@@ -82,8 +87,7 @@ h2 {
     margin-bottom: 2px;
 }
 
-.input-group input,
-.input-group select {
+.input-group input {
     width: 100%;
     border: none;
     background: transparent;
@@ -93,13 +97,60 @@ h2 {
     padding: 4px 0;
 }
 
-/* Gender radio inline – small addition to keep style consistent */
-.input-group div label {
-    font-size: 14px;
-    color: #1f2a3a;
+.password-wrapper {
+    display: flex;
+    align-items: center;
 }
 
-/* Button */
+.toggle-password {
+    color: #6a737d;
+    cursor: pointer;
+    font-size: 18px;
+    padding-left: 10px;
+    padding-bottom: 8px;
+}
+
+.error-msg {
+    color: #e53935;
+    font-size: 12px;
+    margin: -10px 0 10px 4px;
+}
+
+.caps-warning {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    color: #e67e00;
+    font-size: 12px;
+    margin: -10px 0 10px 4px;
+}
+
+.caps-warning.visible {
+    display: flex;
+}
+
+.strength-bar-wrap {
+    height: 4px;
+    background: #e1e4e8;
+    border-radius: 4px;
+    margin: 6px 0 4px;
+    overflow: hidden;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.strength-label {
+    font-size: 11px;
+    color: #6a737d;
+    margin-bottom: 18px;
+}
+
+.btn-signup,
 .btn-login {
     width: 100%;
     padding: 14px;
@@ -111,36 +162,48 @@ h2 {
     font-weight: 700;
     cursor: pointer;
     margin-bottom: 20px;
-    transition: 0.2s;
-    margin-top: 10px;
+    transition: background 0.2s ease;
 }
 
+.btn-signup:hover,
 .btn-login:hover {
     background-color: #0055cc;
-}
-
-.divider {
-    text-align: center;
-    border-bottom: 1px solid #e1e4e8;
-    line-height: 0.1em;
-    margin: 30px 0;
-}
-
-.divider-text {
-    background: #fff;
-    padding: 0 15px;
-    color: #959da5;
-    font-size: 13px;
 }
 
 .footer-text {
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
-    color: grey;
+    color: #575757;
 }
 
-/* Responsive */
+.footer-text a {
+    color: #0066ee;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.ft-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1a1a1a;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    white-space: nowrap;
+}
+
+.ft-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 @media (max-width: 800px) {
     .login-container {
         flex-direction: column;

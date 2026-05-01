@@ -17,20 +17,8 @@ function getRelativePath(target) {
   return target.other;
 }
 
-function readJSON(key, fallback = null) {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch (error) {
-    console.error(`Failed to read ${key}`, error);
-    return fallback;
-  }
-}
-
 function getDisplayName() {
-  const profile = readJSON("ft_profile", {});
-  const credentials = readJSON("ft_credentials", {});
-  return profile.name || credentials.name || "User";
+  return "User";
 }
 
 function createHeader() {
@@ -79,10 +67,6 @@ function createHeader() {
     </div>
   `;
 
-  const logoutLink = document.getElementById("logoutLink");
-  logoutLink.addEventListener("click", () => {
-    localStorage.removeItem("ft_loggedIn");
-  });
 }
 
 createHeader();

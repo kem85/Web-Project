@@ -1,183 +1,217 @@
-// =============================================
-//   HEALTH PROFILE PAGE — Age, Height, Gender
-// =============================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('healthForm');
+﻿document.addEventListener('DOMContentLoaded', () => {
+    const registerForm = document.getElementById('registerForm');
+    const username = document.getElementById('username');
     const ageInput = document.getElementById('age');
     const heightInput = document.getElementById('height');
-    const genderRadios = document.querySelectorAll('input[name="gender"]');
-    const submitBtn = document.getElementById('submitBtn');
+    const emailInput = document.getElementById('email');
+    const confirmEmail = document.getElementById('confirmEmail');
+    const passwordInput = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthLabel = document.getElementById('strengthLabel');
+    const capsWarning = document.getElementById('capsWarning');
+    const signupBtn = document.getElementById('signupBtn');
 
-    // Helper: show temporary toast message
-    function showMessage(text, isError = false) {
-        let toast = document.querySelector('.custom-toast');
-        if (toast) toast.remove();
-        
-        toast = document.createElement('div');
-        toast.className = 'custom-toast';
-        toast.textContent = text;
-        toast.style.position = 'fixed';
-        toast.style.bottom = '30px';
-        toast.style.left = '50%';
-        toast.style.transform = 'translateX(-50%)';
-        toast.style.backgroundColor = isError ? '#e53935' : '#28a745';
-        toast.style.color = 'white';
-        toast.style.padding = '12px 24px';
-        toast.style.borderRadius = '40px';
-        toast.style.fontSize = '14px';
-        toast.style.fontWeight = '500';
-        toast.style.zIndex = '9999';
-        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 2500);
-    }
+    const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    const getGroup = (input) => input.closest('.input-group');
 
-    // Clear previous inline errors
-    function clearFieldErrors() {
-        document.querySelectorAll('.error-msg').forEach(el => el.remove());
-        document.querySelectorAll('.input-group').forEach(g => g.classList.remove('error', 'success'));
-    }
-
-    function showFieldError(inputElement, message) {
-        const group = inputElement.closest('.input-group');
+    function setError(input, message) {
+        const group = getGroup(input);
         if (!group) return;
         group.classList.add('error');
         group.classList.remove('success');
-        const existing = group.parentNode.querySelector('.error-msg');
-        if (existing) existing.remove();
-        const errSpan = document.createElement('p');
-        errSpan.className = 'error-msg';
-        errSpan.style.color = '#e53935';
-        errSpan.style.fontSize = '12px';
-        errSpan.style.margin = '-8px 0 10px 4px';
-        errSpan.textContent = message;
-        group.insertAdjacentElement('afterend', errSpan);
-    }
-
-    function showFieldSuccess(inputElement) {
-        const group = inputElement.closest('.input-group');
-        if (group) {
-            group.classList.remove('error');
-            group.classList.add('success');
-            const next = group.nextElementSibling;
-            if (next && next.classList.contains('error-msg')) next.remove();
+        const next = group.nextElementSibling;
+        if (next && next.classList.contains('error-msg')) next.remove();
+        if (message.trim()) {
+            const msg = document.createElement('p');
+            msg.className = 'error-msg';
+            msg.textContent = message;
+            group.insertAdjacentElement('afterend', msg);
         }
     }
 
-    // Real-time validation (optional)
-    ageInput.addEventListener('input', () => {
-        const val = parseInt(ageInput.value);
-        if (ageInput.value && (isNaN(val) || val < 1 || val > 120)) {
-            showFieldError(ageInput, 'Age must be between 1 and 120');
-        } else if (ageInput.value) {
-            showFieldSuccess(ageInput);
-        } else {
-            const group = ageInput.closest('.input-group');
-            group?.classList.remove('error', 'success');
-            const next = group?.nextElementSibling;
-            if (next?.classList?.contains('error-msg')) next.remove();
-        }
+    function clearError(input) {
+        const group = getGroup(input);
+        if (!group) return;
+        group.classList.remove('error');
+        const next = group.nextElementSibling;
+        if (next && next.classList.contains('error-msg')) next.remove();
+    }
+
+    function setSuccess(input) {
+        const group = getGroup(input);
+        if (!group) return;
+        group.classList.remove('error');
+        group.classList.add('success');
+        const next = group.nextElementSibling;
+        if (next && next.classList.contains('error-msg')) next.remove();
+    }
+
+    function showToast(message, duration = 3000) {
+        const oldToast = document.querySelector('.ft-toast');
+        if (oldToast) oldToast.remove();
+        const toast = document.createElement('div');
+        toast.className = 'ft-toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+        }, duration);
+    }
+
+    function updateStrengthMeter() {
+        const value = passwordInput.value;
+        let score = 0;
+        if (value.length >= 8) score++;
+        if (value.length >= 12) score++;
+        if (/[A-Z]/.test(value)) score++;
+        if (/[0-9]/.test(value)) score++;
+        if (/[^A-Za-z0-9]/.test(value)) score++;
+
+        const pct = value.length === 0 ? 0 : Math.max(20, score * 20);
+        const colors = ['', '#e53935', '#e67e00', '#f9a825', '#43a047', '#1b5e20'];
+        const labels = ['', 'Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
+
+        strengthBar.style.width = pct + '%';
+        strengthBar.style.background = colors[score] || '#e1e4e8';
+        strengthLabel.textContent = value.length ? labels[score] : 'Password strength';
+        strengthLabel.style.color = colors[score] || '#6a737d';
+    }
+
+    [username, ageInput, heightInput, emailInput, confirmEmail, passwordInput, confirmPassword].forEach((input) => {
+        input.addEventListener('input', () => clearError(input));
     });
 
-    heightInput.addEventListener('input', () => {
-        const val = parseInt(heightInput.value);
-        if (heightInput.value && (isNaN(val) || val < 50 || val > 300)) {
-            showFieldError(heightInput, 'Height must be between 50 cm and 300 cm');
-        } else if (heightInput.value) {
-            showFieldSuccess(heightInput);
-        } else {
-            const group = heightInput.closest('.input-group');
-            group?.classList.remove('error', 'success');
-            const next = group?.nextElementSibling;
-            if (next?.classList?.contains('error-msg')) next.remove();
-        }
+    emailInput.addEventListener('blur', () => {
+        const value = emailInput.value.trim();
+        if (!value) setError(emailInput, 'Email is required.');
+        else if (!isValidEmail(value)) setError(emailInput, 'Please enter a valid email address.');
+        else setSuccess(emailInput);
     });
 
-    // Form submission
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        clearFieldErrors();
+    confirmEmail.addEventListener('blur', () => {
+        const value = confirmEmail.value.trim();
+        if (!value) setError(confirmEmail, 'Please confirm your email.');
+        else if (value !== emailInput.value.trim()) setError(confirmEmail, 'Emails do not match.');
+        else if (!isValidEmail(value)) setError(confirmEmail, 'Please enter a valid email address.');
+        else setSuccess(confirmEmail);
+    });
 
-        let isValid = true;
-        const age = parseInt(ageInput.value);
-        const height = parseFloat(heightInput.value);
-        let selectedGender = null;
-        for (let radio of genderRadios) {
-            if (radio.checked) {
-                selectedGender = radio.value;
-                break;
-            }
-        }
+    passwordInput.addEventListener('input', () => {
+        clearError(passwordInput);
+        updateStrengthMeter();
+    });
 
-        // Validate age
-        if (!ageInput.value.trim()) {
-            showFieldError(ageInput, 'Please enter your age');
-            isValid = false;
-        } else if (isNaN(age) || age < 1 || age > 120) {
-            showFieldError(ageInput, 'Age must be between 1 and 120');
-            isValid = false;
+    passwordInput.addEventListener('keydown', (event) => {
+        capsWarning.classList.toggle('visible', event.getModifierState('CapsLock'));
+    });
+    passwordInput.addEventListener('keyup', (event) => {
+        capsWarning.classList.toggle('visible', event.getModifierState('CapsLock'));
+    });
+
+    eyeIcon.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        eyeIcon.classList.toggle('fa-eye');
+        eyeIcon.classList.toggle('fa-eye-slash');
+    });
+
+    registerForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        let valid = true;
+
+        if (!username.value.trim()) {
+            setError(username, 'Username is required.');
+            valid = false;
         } else {
-            showFieldSuccess(ageInput);
+            setSuccess(username);
         }
 
-        // Validate height
-        if (!heightInput.value.trim()) {
-            showFieldError(heightInput, 'Please enter your height');
-            isValid = false;
-        } else if (isNaN(height) || height < 50 || height > 300) {
-            showFieldError(heightInput, 'Height must be between 50 cm and 300 cm');
-            isValid = false;
+        const ageValue = ageInput.value.trim();
+        if (!ageValue) {
+            setError(ageInput, 'Age is required.');
+            valid = false;
+        } else if (isNaN(ageValue) || Number(ageValue) < 1 || Number(ageValue) > 120) {
+            setError(ageInput, 'Age must be between 1 and 120.');
+            valid = false;
         } else {
-            showFieldSuccess(heightInput);
+            setSuccess(ageInput);
         }
 
-        // Validate gender
-        if (!selectedGender) {
-            const genderGroup = document.querySelector('.input-group:has(input[name="gender"])');
-            if (genderGroup && !document.querySelector('.gender-error-msg')) {
-                const err = document.createElement('p');
-                err.className = 'error-msg gender-error-msg';
-                err.style.color = '#e53935';
-                err.style.fontSize = '12px';
-                err.style.margin = '-8px 0 10px 4px';
-                err.textContent = 'Please select your gender';
-                genderGroup.insertAdjacentElement('afterend', err);
-            }
-            isValid = false;
+        const heightValue = heightInput.value.trim();
+        if (!heightValue) {
+            setError(heightInput, 'Height is required.');
+            valid = false;
+        } else if (isNaN(heightValue) || Number(heightValue) < 50 || Number(heightValue) > 300) {
+            setError(heightInput, 'Height must be between 50 and 300 cm.');
+            valid = false;
         } else {
-            const existingErr = document.querySelector('.gender-error-msg');
-            if (existingErr) existingErr.remove();
+            setSuccess(heightInput);
         }
 
-        if (isValid) {
-            // Save data (e.g., to localStorage or send to server)
-            const profile = {
-                age: age,
-                height: height,
-                gender: selectedGender,
-                timestamp: new Date().toISOString()
-            };
-            localStorage.setItem('healthProfile', JSON.stringify(profile));
-            console.log('Profile saved:', profile);
-            
-            // Visual feedback
-            submitBtn.textContent = 'Saved ✓';
-            submitBtn.style.backgroundColor = '#28a745';
-            showMessage('Profile saved successfully!', false);
+        const emailValue = emailInput.value.trim();
+        const confirmEmailValue = confirmEmail.value.trim();
+
+        if (!emailValue) {
+            setError(emailInput, 'Email is required.');
+            valid = false;
+        } else if (!isValidEmail(emailValue)) {
+            setError(emailInput, 'Please enter a valid email address.');
+            valid = false;
+        } else {
+            setSuccess(emailInput);
+        }
+
+        if (!confirmEmailValue) {
+            setError(confirmEmail, 'Please confirm your email.');
+            valid = false;
+        } else if (confirmEmailValue !== emailValue) {
+            setError(confirmEmail, 'Emails do not match.');
+            valid = false;
+        } else {
+            setSuccess(confirmEmail);
+        }
+
+        const passwordValue = passwordInput.value;
+        if (!passwordValue) {
+            setError(passwordInput, 'Password is required.');
+            valid = false;
+        } else if (passwordValue.length < 6) {
+            setError(passwordInput, 'Password must be at least 6 characters.');
+            valid = false;
+        } else {
+            setSuccess(passwordInput);
+        }
+
+        if (!confirmPassword.value) {
+            setError(confirmPassword, 'Please confirm your password.');
+            valid = false;
+        } else if (confirmPassword.value !== passwordValue) {
+            setError(confirmPassword, 'Passwords do not match.');
+            valid = false;
+        } else {
+            setSuccess(confirmPassword);
+        }
+
+        if (!valid) {
+            showToast('Please fix the errors and try again.', 3200);
+            return;
+        }
+
+        signupBtn.disabled = true;
+        signupBtn.textContent = 'Creating account…';
+
+        setTimeout(() => {
+            // TODO: submit registration data to your database/backend here.
+            signupBtn.textContent = '✓ Account created!';
+            showToast('Account created successfully!');
             setTimeout(() => {
-                submitBtn.textContent = 'Save Profile';
-                submitBtn.style.backgroundColor = '#0066ee';
-            }, 2000);
-            
-            // Optional: redirect or enable next step
-            // window.location.href = 'dashboard.html';
-        } else {
-            showMessage('Please fix the errors above', true);
-        }
+                window.location.href = '../index/index.html';
+            }, 800);
+        }, 700);
     });
 });
