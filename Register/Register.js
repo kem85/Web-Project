@@ -2,6 +2,7 @@
     const registerForm = document.getElementById('registerForm');
     const username = document.getElementById('username');
     const ageInput = document.getElementById('age');
+    const genderInput = document.getElementById('gender');
     const heightInput = document.getElementById('height');
     const emailInput = document.getElementById('email');
     const confirmEmail = document.getElementById('confirmEmail');
@@ -81,7 +82,7 @@
         strengthLabel.style.color = colors[score] || '#6a737d';
     }
 
-    [username, ageInput, heightInput, emailInput, confirmEmail, passwordInput, confirmPassword].forEach((input) => {
+    [username, ageInput, genderInput, heightInput, emailInput, confirmEmail, passwordInput, confirmPassword].forEach((input) => {
         input.addEventListener('input', () => clearError(input));
     });
 
@@ -140,6 +141,13 @@
             valid = false;
         } else {
             setSuccess(ageInput);
+        }
+
+        if (!genderInput.value) {
+            setError(genderInput, 'Gender is required.');
+            valid = false;
+        } else {
+            setSuccess(genderInput);
         }
 
         const heightValue = heightInput.value.trim();
@@ -207,6 +215,15 @@
 
         setTimeout(() => {
             // TODO: submit registration data to your database/backend here.
+            const registrationData = {
+                username: username.value.trim(),
+                age: Number(ageInput.value.trim()),
+                gender: genderInput.value,
+                height: Number(heightInput.value.trim()),
+                email: emailValue,
+                password: passwordValue
+            };
+            console.log('Register data', registrationData);
             signupBtn.textContent = '✓ Account created!';
             showToast('Account created successfully!');
             setTimeout(() => {

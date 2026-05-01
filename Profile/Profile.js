@@ -32,27 +32,15 @@ function init() {
   let state = loadState();
   renderProfile(state);
 
-  if (new URLSearchParams(window.location.search).get('open') === 'edit') {
-    openEditModal(state, (updated) => {
+  const profilePic = document.querySelector('.profile-pic');
+  if (profilePic) {
+    profilePic.style.cursor = 'pointer';
+    profilePic.addEventListener('click', () => openPhotoPicker(state, (updated) => {
       state = updated;
       saveState(state);
       renderProfile(state);
-    });
+    }));
   }
-
-  // Edit Profile button
-  document.getElementById('btn1').addEventListener('click', () => openEditModal(state, (updated) => {
-    state = updated;
-    saveState(state);
-    renderProfile(state);
-  }));
-
-  // Edit Photos button
-  document.getElementById('btn2').addEventListener('click', () => openPhotoPicker(state, (updated) => {
-    state = updated;
-    saveState(state);
-    renderProfile(state);
-  }));
 
   // Friends section
   injectFriendsUI(() => state, (updated) => {

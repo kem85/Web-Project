@@ -73,7 +73,6 @@ const loginForm  = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passInput  = document.getElementById('password');
 const loginBtn   = loginForm.querySelector('.btn-login');
-const forgotLink = document.querySelector('.forgot-link');
 const eyeIcon = document.getElementById('eyeIcon');
 
 if (eyeIcon) {
@@ -255,22 +254,11 @@ loginForm.addEventListener('submit', (e) => {
 });
 
 // ═══════════════════════════════════════════════
-//  SOCIAL BUTTONS & FORGOT PASSWORD
+//  SOCIAL BUTTONS
 // ═══════════════════════════════════════════════
 document.querySelectorAll('.btn-social').forEach(btn =>
   btn.addEventListener('click', () => showToast('Social login coming soon!'))
 );
-
-forgotLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  const email = emailInput.value.trim();
-  if (!email || !isValidEmail(email)) {
-    setError(emailInput, 'Enter your email above first.');
-    emailInput.focus();
-    return;
-  }
-  showToast(`Password reset link sent to ${email}`);
-});
 
 // ── Auto-focus ────────────────────────────────
 emailInput.focus();
