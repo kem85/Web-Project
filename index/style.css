@@ -15,71 +15,6 @@ text-decoration:none;
 color:inherit;
 }
 
-
-/* /* =======================
-   HEADER
-======================= */
-
-/*.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 40px;
-background:white;
-border-bottom:1px solid #ddd;
-}
-
-.logo h1{
-color:#1a73e8;
-margin:0;
-font-size:28px;
-}
-
-.user-section{
-display:flex;
-align-items:center;
-gap:15px;
-font-size:14px;
-}
-
-.streak{
-color:#333;
-font-weight:bold;
-display:flex;
-align-items:center;
-gap:15px;
-font-size:14px;
-} */
-
-
-/* =======================
-   NAVBAR
-======================= */
-
-/* .navbar{
-background:#1a73e8;
-padding:12px 40px;
-}
-
-.navbar ul{
-display:flex;
-gap:30px;
-list-style:none;
-margin:0;
-padding:0;
-}
-
-.navbar li{
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-
-.navbar li:hover{
-opacity:0.8;
-} */
-
-
 /* =======================
    PAGE TITLE
 ======================= */
@@ -97,7 +32,7 @@ font-size:26px;
 .title-left{
 display:flex;
 align-items:center;
-gap:10px;
+gap:16px;
 }
 
 .user-photo{
@@ -109,16 +44,14 @@ object-fit:cover;
 
 /* =======================
    DASHBOARD PAGE
-   (page 1)
 ======================= */
 
 .dashboard{
 display:flex;
 gap:40px;
 padding:40px;
+flex-wrap:wrap;
 }
-
-/* cards */
 
 .nutrition-card,
 .calories-card{
@@ -128,8 +61,6 @@ border-radius:10px;
 width:350px;
 box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
-
-/* calories input */
 
 .calories-input{
 display:flex;
@@ -141,14 +72,6 @@ margin-bottom:20px;
 .calories-input input{
 padding:8px;
 width:100px;
-}
-
-/* macros */
-
-.macro{
-display:flex;
-justify-content:space-between;
-margin:12px 0;
 }
 
 .macro-table{
@@ -169,31 +92,62 @@ padding:8px;
 text-align:center;
 }
 
-/* calorie circle */
+/* =======================
+   FUNCTIONAL CALORIE CIRCLE
+======================= */
 
-.calorie-circle{
-width:150px;
-height:150px;
-border-radius:50%;
-border:10px solid #e5e5e5;
-
+.progress-circle{
 display:flex;
 justify-content:center;
 align-items:center;
-
-font-size:28px;
-font-weight:bold;
-
-margin:20px auto;
+margin:25px 0 28px;
 }
 
+.circle{
+--progress-deg: 0deg;
+width:160px;
+height:160px;
+border-radius:50%;
+background:conic-gradient(#1a73e8 0deg var(--progress-deg), #e5e5e5 var(--progress-deg) 360deg);
+display:flex;
+justify-content:center;
+align-items:center;
+transition:background 0.3s ease;
+}
+
+.circle-inner{
+width:116px;
+height:116px;
+border-radius:50%;
+background:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.circle-inner span{
+font-size:30px;
+font-weight:bold;
+color:#1f2937;
+line-height:1;
+}
+
+.circle-inner small{
+margin-top:8px;
+font-size:13px;
+color:#666;
+}
+
+.summary p{
+font-size:16px;
+margin:14px 0;
+}
 
 /* =======================
-   CHECK-IN PAGE
-   (page 2)
-   ======================= */ 
-
-/* top inputs */
+   CHECK-IN PAGE STYLES KEPT
+======================= */
 
 .inputs{
 display:flex;
@@ -218,17 +172,10 @@ border:1px solid #ccc;
 border-radius:4px;
 }
 
-/* last weight */
-
 .last-weight{
 margin:20px 0;
 color:#777;
 }
-
-
-/* =======================
-   TABLE
-======================= */
 
 .measurements{
 width:100%;
@@ -257,114 +204,13 @@ border:1px solid #ccc;
 border-radius:4px;
 }
 
-
-/* =======================
-   BUTTON
-======================= */
-
-.save-btn{
-margin-top:30px;
-padding:12px 40px;
-background:#1a73e8;
-color:white;
-border:none;
-font-weight:bold;
-cursor:pointer;
-border-radius:4px;
+@media (max-width: 800px){
+.dashboard{
+padding:20px;
 }
 
-.save-btn:hover{
-background:#155ec0;
+.nutrition-card,
+.calories-card{
+width:100%;
 }
-/* =======================
-   PROGRESS CIRCLE
-======================= */
-
-.progress-circle{
-
-display:flex;
-justify-content:center;
-margin-top:20px;
-
 }
-
-.circle{
-
-width:160px;
-height:160px;
-
-border-radius:50%;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-font-size:28px;
-font-weight:bold;
-
-background:conic-gradient(
-#1a73e8 0deg,
-#1a73e8 360deg,
-#e5e5e5 360deg
-);
-
-position:relative;
-
-}
-
-.circle::before{
-
-content:"";
-
-position:absolute;
-
-width:120px;
-height:120px;
-
-background:white;
-
-border-radius:50%;}
-
-/* =======================
-   FOOTER
-======================= */
- /* .main-footer {
-    background: #ababab;
-    height:100%;
-    width: 100%;
-    
-}
-.footer-container {
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.footer-links {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    
-}
-
-.footer-links a {
-    color: #0066ee;
-    text-decoration: none;
-    font-size: 13px;
-}
-
-.footer-links a:hover {
-    opacity: 0.8;
-}
-.footer-copyright {
-    text-align: center;
-    color: black;
-    font-size: 10px;
-    margin-top: 35px;
-    margin-bottom: 20px;
-}
-.footer-lang {
-    margin-left: auto;
-}  */

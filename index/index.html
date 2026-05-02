@@ -9,7 +9,8 @@
         username: "{{ username }}",
         age: "{{ age }}",
         height: "{{ height }}",
-        gender: "{{ gender }}"
+        gender: "{{ gender }}",
+        weight: "{{ weight }}"
     };
 </script>
 <script>
@@ -36,13 +37,10 @@
         <img
           id="userPhoto"
           class="user-photo"
-          src="/Profile/muslim_cat.jpg"
+          src="/Profile/muslim%20cat.jpg"
           alt="user"
         />
         <h2 id="pageTitle">Today</h2>
-        <div class="streak">
-          <span id="streak">1</span> <span id="streakLabel">Day Streak</span>
-        </div>
       </div>
     </section>
 
@@ -105,15 +103,18 @@
 
       <div class="calories-card">
         <h3>Calories</h3>
-        <div class="progress-circle">
-          <div class="circle">
-            <span id="remainingCalories">1930</span>
+        <div class="progress-circle" aria-label="Calories progress">
+          <div class="circle" id="calorieCircle">
+            <div class="circle-inner">
+              <span id="remainingCalories">0</span>
+              <small>Remaining</small>
+            </div>
           </div>
         </div>
         <div class="summary">
-          <p>Base Goal: <span id="goalCalories">1930</span></p>
-          <p>Food: 0</p>
-          <p>Exercise: 0</p>
+          <p>Base Goal: <span id="goalCalories">0</span></p>
+          <p>Food: <span id="foodCalories">0</span></p>
+          <p>Exercise: <span id="exerciseCalories">0</span></p>
         </div>
       </div>
     </main>

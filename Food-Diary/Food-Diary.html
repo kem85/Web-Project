@@ -5,6 +5,13 @@
     <title>Fitness Tracker VY</title>
     <script>
       window.dbUsername = "{{ username }}";
+      window.userData = {
+        username: "{{ username }}",
+        age: "{{ age }}",
+        height: "{{ height }}",
+        weight: "{{ weight }}",
+        gender: "{{ gender }}"
+      };
     </script>
     <link rel="stylesheet" href="/Food-Diary/Food-Diary.css" />
     <link rel="stylesheet" href="/Global/Header/header.css" />
@@ -83,87 +90,59 @@
           </tr>
         </thead>
 
-        <tbody>
-          <tr class="action-row">
-            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-
-          <tr class="section-header">
-            <td colspan="7">Lunch</td>
-          </tr>
-          <tr class="action-row">
-            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-
-          <tr class="section-header">
-            <td colspan="7">Dinner</td>
-          </tr>
-          <tr class="action-row">
-            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-
-          <tr class="section-header">
-            <td colspan="7">Snacks</td>
-          </tr>
-          <tr class="action-row">
-            <td><a href="#">Add Food</a> | <a href="#">Quick Tools</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
+        <tbody id="mealRows"></tbody>
 
         <tfoot>
           <tr class="totals-row">
             <td class="label">Totals</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
+            <td data-total="calories">0</td>
+            <td data-total="carbs">0</td>
+            <td data-total="fat">0</td>
+            <td data-total="protein">0</td>
+            <td data-total="sodium">0</td>
+            <td data-total="sugar">0</td>
           </tr>
           <tr class="goal-row">
             <td class="label">Your Daily Goal</td>
-            <td>2,140</td>
-            <td>268</td>
-            <td>71</td>
-            <td>107</td>
-            <td>2,300</td>
-            <td>80</td>
+            <td data-goal="calories">2,140</td>
+            <td data-goal="carbs">268</td>
+            <td data-goal="fat">71</td>
+            <td data-goal="protein">107</td>
+            <td data-goal="sodium">2,300</td>
+            <td data-goal="sugar">80</td>
           </tr>
           <tr class="remaining-row">
             <td class="label">Remaining</td>
-            <td class="positive">2,140</td>
-            <td class="positive">268</td>
-            <td class="positive">71</td>
-            <td class="positive">107</td>
-            <td class="positive">2,300</td>
-            <td class="positive">80</td>
+            <td class="positive" data-remaining="calories">2,140</td>
+            <td class="positive" data-remaining="carbs">268</td>
+            <td class="positive" data-remaining="fat">71</td>
+            <td class="positive" data-remaining="protein">107</td>
+            <td class="positive" data-remaining="sodium">2,300</td>
+            <td class="positive" data-remaining="sugar">80</td>
           </tr>
         </tfoot>
       </table>
+
+      <div class="food-search-modal hidden" id="foodSearchModal" role="dialog" aria-modal="true" aria-labelledby="foodSearchTitle">
+        <div class="food-search-box">
+          <button class="modal-close" type="button" aria-label="Close food search">×</button>
+          <h2 id="foodSearchTitle">Add Food</h2>
+          <p class="modal-meal-label">Choose a food to add to <strong id="activeMealName">Breakfast</strong>.</p>
+
+          <form class="food-search-form" id="foodSearchForm">
+            <input
+              type="text"
+              id="foodSearchInput"
+              placeholder="Search egg, rice, chicken breast..."
+              autocomplete="off"
+            />
+            <button type="submit">Search</button>
+          </form>
+
+          <p class="search-status" id="foodSearchStatus"></p>
+          <div class="food-results" id="foodResults"></div>
+        </div>
+      </div>
 
       <div class="complete-entry">
         <p class="complete-text">
@@ -230,7 +209,6 @@
           <a href="#">Jobs</a>
           <a href="#">Feedback</a>
           <a href="#">Community Guidelines</a>
-          <a href="#">Cookie Preferences</a>
         </nav>
 
         <div class="footer-lang">

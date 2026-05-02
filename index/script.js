@@ -1,22 +1,34 @@
-const data = window.userData;
-function getMyCalories() {
-  const user = window.userData;
-  const W = parseFloat(user.weight) || 70; // Weight
-  const H = parseFloat(user.height) || 170; // Height
-  const A = parseInt(user.age) || 25;       // Age
-  const gender = user.gender.toLowerCase();
+const userData = window.userData || {};
 
-  // 3. The Math from your image (Mifflin-St Jeor)
-  let bmr = (10 * W) + (6.25 * H) - (5 * A);
+const DEFAULT_PROFILE = {
+  weight: 70,
+  height: 170,
+  age: 25,
+};
 
-  if (gender === 'male' || gender === 'man') {
-    bmr = bmr + 5; // Formula for men
-  } else {
-    bmr = bmr - 161; // Formula for women
+function getValidNumber(value, fallback, min, max) {
+  const number = Number.parseFloat(value);
+  if (!Number.isFinite(number) || number < min || number > max) {
+    return fallback;
   }
+  return number;
+}
+
+function getMyCalories() {
+  // Protect the dashboard from corrupted profile/session values.
+  // Example: a bad weight value like 500 kg would create a fake 6000+ calorie goal.
+  const W = getValidNumber(userData.weight, DEFAULT_PROFILE.weight, 30, 250);
+  const H = getValidNumber(userData.height, DEFAULT_PROFILE.height, 100, 230);
+  const A = getValidNumber(userData.age, DEFAULT_PROFILE.age, 10, 100);
+  const gender = String(userData.gender || "male").toLowerCase();
+
+  let bmr = 10 * W + 6.25 * H - 5 * A;
+  bmr += gender === "female" || gender === "woman" ? -161 : 5;
+
   return Math.round(bmr);
 }
-const DEFAULT_STATE = {
+
+const state = {
   calories: getMyCalories(),
   carbsPercent: 50,
   fatPercent: 30,
@@ -29,95 +41,62 @@ function roundValue(value) {
   return Math.round(value);
 }
 
-function loadNutritionState() {
-  return { ...DEFAULT_STATE };
-}
-
-function getCheckInSummary() {
-  return { streak: 1 };
-}
-
-function getProfileSummary() {
-  return {
-    username: "User",
-    photo: "/Profile/muslim_cat.jpg",
-  };
-}
-
 function calculateMacroGrams(calories, percentage, caloriesPerGram) {
   return roundValue((calories * (percentage / 100)) / caloriesPerGram);
 }
 
 function formatTodayLabel() {
-  const formatter = new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     day: "numeric",
     month: "long",
-  });
-
-  return formatter.format(new Date());
+  }).format(new Date());
 }
 
-function getTotalPercent(state) {
+function getTotalPercent() {
   return state.carbsPercent + state.fatPercent + state.proteinPercent;
 }
 
-function syncSelectValues(state, elements) {
+function syncSelectValues(elements) {
   elements.carbPercent.value = String(state.carbsPercent);
   elements.fatPercent.value = String(state.fatPercent);
   elements.proteinPercent.value = String(state.proteinPercent);
 }
 
-function updateMacroTable(state, elements) {
-  const totalPercent = getTotalPercent(state);
-  const carbsGrams = calculateMacroGrams(state.calories, state.carbsPercent, 4);
-  const fatGrams = calculateMacroGrams(state.calories, state.fatPercent, 9);
-  const proteinGrams = calculateMacroGrams(state.calories, state.proteinPercent, 4);
-  const totalCalories = roundValue(state.calories * (totalPercent / 100));
+function updateMacroTable(elements) {
+  const totalPercent = getTotalPercent();
 
-  elements.carbGram.textContent = carbsGrams;
-  elements.fatGram.textContent = fatGrams;
-  elements.proteinGram.textContent = proteinGrams;
+  elements.carbGram.textContent = calculateMacroGrams(state.calories, state.carbsPercent, 4);
+  elements.fatGram.textContent = calculateMacroGrams(state.calories, state.fatPercent, 9);
+  elements.proteinGram.textContent = calculateMacroGrams(state.calories, state.proteinPercent, 4);
   elements.totalPercent.textContent = totalPercent;
-  elements.totalCalories.textContent = totalCalories;
+  elements.totalCalories.textContent = roundValue(state.calories * (totalPercent / 100));
 }
 
-function updateCaloriesCard(state, elements) {
-  const remainingCalories =
-    state.calories - state.foodCalories + state.exerciseCalories;
+function updateCaloriesCard(elements) {
+  const remainingCalories = state.calories - state.foodCalories + state.exerciseCalories;
   const consumedCalories = Math.max(0, state.foodCalories - state.exerciseCalories);
-  const progress = state.calories
-    ? Math.min(consumedCalories / state.calories, 1)
-    : 0;
-  const progressDegrees = roundValue(progress * 360);
+  const progress = state.calories ? Math.min(consumedCalories / state.calories, 1) : 0;
+  const progressDegrees = `${Math.round(progress * 360)}deg`;
 
   elements.remainingCalories.textContent = remainingCalories;
   elements.goalCalories.textContent = state.calories;
-  elements.circle.style.background = `conic-gradient(#1a73e8 0deg, #1a73e8 ${progressDegrees}deg, #e5e5e5 ${progressDegrees}deg, #e5e5e5 360deg)`;
+  elements.foodCalories.textContent = state.foodCalories;
+  elements.exerciseCalories.textContent = state.exerciseCalories;
+  elements.circle.style.setProperty("--progress-deg", progressDegrees);
 }
 
 function updateHeaderContent() {
-  const profile = getProfileSummary();
   const usernameElement = document.getElementById("username");
   const userPhotoElement = document.getElementById("userPhoto");
 
   if (usernameElement) {
-    usernameElement.textContent = profile.username;
+    usernameElement.textContent = userData.username || "User";
   }
 
   if (userPhotoElement) {
-    userPhotoElement.src = profile.photo;
+    userPhotoElement.src = "/Profile/muslim%20cat.jpg";
   }
-}
-
-function updatePageTitle(elements) {
-  elements.pageTitle.textContent = formatTodayLabel();
-}
-
-function updateStreak(elements, streakValue) {
-  elements.streak.textContent = streakValue;
-  elements.streakLabel.textContent =
-    streakValue === 1 ? "Day Streak" : "Days Streak";
 }
 
 function getStateKeyFromSelectId(selectId) {
@@ -128,6 +107,29 @@ function getStateKeyFromSelectId(selectId) {
   };
 
   return idMap[selectId];
+}
+
+function getTodayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+async function loadFoodCaloriesFromDiary(elements) {
+  try {
+    const response = await fetch(`/api/diary?date=${encodeURIComponent(getTodayKey())}`);
+    if (!response.ok) throw new Error("Diary API failed.");
+
+    const data = await response.json();
+    state.foodCalories = Math.round(Number(data?.totals?.calories) || 0);
+
+    // Only sync food intake from the Food Diary.
+    // Do NOT replace the Home calorie goal from diary data, because notes/profile fields
+    // can accidentally affect the server goal and make the number jump.
+
+    updateMacroTable(elements);
+    updateCaloriesCard(elements);
+  } catch (error) {
+    updateCaloriesCard(elements);
+  }
 }
 
 function initDashboard() {
@@ -144,44 +146,38 @@ function initDashboard() {
     totalCalories: document.getElementById("totalCalories"),
     remainingCalories: document.getElementById("remainingCalories"),
     goalCalories: document.getElementById("goalCalories"),
-    streak: document.getElementById("streak"),
-    streakLabel: document.getElementById("streakLabel"),
-    circle: document.querySelector(".circle"),
+    foodCalories: document.getElementById("foodCalories"),
+    exerciseCalories: document.getElementById("exerciseCalories"),
+    circle: document.getElementById("calorieCircle"),
   };
 
-  const state = loadNutritionState();
-  const checkInSummary = getCheckInSummary();
-
   elements.caloriesInput.value = state.calories;
-  syncSelectValues(state, elements);
-  updatePageTitle(elements);
-  updateStreak(elements, checkInSummary.streak);
+  elements.pageTitle.textContent = formatTodayLabel();
 
-  updateMacroTable(state, elements);
-  updateCaloriesCard(state, elements);
+  syncSelectValues(elements);
+  updateMacroTable(elements);
+  updateCaloriesCard(elements);
   updateHeaderContent();
+  loadFoodCaloriesFromDiary(elements);
+
+  window.addEventListener("focus", () => loadFoodCaloriesFromDiary(elements));
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) loadFoodCaloriesFromDiary(elements);
+  });
 
   const handlePercentChange = (event) => {
-    const nextState = {
-      ...state,
-      carbsPercent: Number(elements.carbPercent.value),
-      fatPercent: Number(elements.fatPercent.value),
-      proteinPercent: Number(elements.proteinPercent.value),
-    };
+    const stateKey = getStateKeyFromSelectId(event.target.id);
+    const oldValue = state[stateKey];
+    state[stateKey] = Number(event.target.value);
 
-    if (getTotalPercent(nextState) > 100) {
-      const stateKey = getStateKeyFromSelectId(event.target.id);
-      event.target.value = String(state[stateKey]);
+    if (getTotalPercent() > 100) {
+      state[stateKey] = oldValue;
+      event.target.value = String(oldValue);
       window.alert("Total macro percentages cannot exceed 100%.");
       return;
     }
 
-    state.carbsPercent = nextState.carbsPercent;
-    state.fatPercent = nextState.fatPercent;
-    state.proteinPercent = nextState.proteinPercent;
-
-    syncSelectValues(state, elements);
-    updateMacroTable(state, elements);
+    updateMacroTable(elements);
   };
 
   elements.carbPercent.addEventListener("change", handlePercentChange);

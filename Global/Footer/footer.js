@@ -12,7 +12,6 @@ function createFooter() {
             <a href="#">Jobs</a>
             <a href="#">Feedback</a>
             <a href="#">Community Guidelines</a>
-            <a href="#">Cookie Preferences</a>
         </nav>
 
         <div class="footer-lang">

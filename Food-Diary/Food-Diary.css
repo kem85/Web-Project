@@ -230,7 +230,7 @@ a {
   text-align: left;
 }
 
-/* "Add Food | Quick Tools" rows */
+/* "Add Food" rows */
 .action-row td {
   padding: 10px 0;
   border-bottom: 1px solid #eaeaea; /* Light gray line under sections */
@@ -510,3 +510,280 @@ a {
 .footer-lang {
   margin-left: auto;
 } */
+/* ==========================================================
+   11. FOOD DIARY INTERACTIONS
+   Adds working food rows and search modal while keeping the
+   original MyFitnessPal-like table design.
+========================================================== */
+.food-row td {
+  padding: 10px 5px;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 12px;
+  vertical-align: top;
+}
+
+.food-row td:first-child {
+  text-align: left;
+}
+
+.food-name {
+  color: #333;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.serving-size {
+  color: #777;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.remove-food {
+  background: none;
+  border: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 0;
+}
+
+.remove-food:hover {
+  text-decoration: underline;
+}
+
+.empty-food-row td {
+  color: #777;
+  font-size: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: left !important;
+}
+
+.meal-total-row td {
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #eaeaea;
+  color: #444;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 5px;
+}
+
+.meal-total-row td:first-child {
+  color: #00548f;
+  text-align: right;
+}
+
+.add-food-link {
+  background: none;
+  border: none;
+  color: #00548f;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0;
+}
+
+.add-food-link:hover {
+  text-decoration: underline;
+}
+
+.negative {
+  color: #c0392b !important;
+}
+
+.food-search-modal {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: 20px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.food-search-modal.hidden {
+  display: none;
+}
+
+.food-search-box {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  max-width: 560px;
+  padding: 20px;
+  position: relative;
+  width: 100%;
+}
+
+.food-search-box h2 {
+  color: #00548f;
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.modal-meal-label {
+  color: #555;
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #777;
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+  position: absolute;
+  right: 14px;
+  top: 12px;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.food-search-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.food-search-form input {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  flex: 1;
+  font-size: 14px;
+  padding: 9px 10px;
+}
+
+.food-search-form button {
+  background-color: #5cb85c;
+  border: 1px solid #4a8222;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 9px 18px;
+}
+
+.food-search-form button:hover {
+  background-color: #4f9e32;
+}
+
+.search-status {
+  color: #555;
+  font-size: 12px;
+  min-height: 18px;
+  margin: 8px 0;
+}
+
+.search-status.loading {
+  color: #00548f;
+  font-weight: bold;
+}
+
+.search-status.error {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.food-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 330px;
+  overflow-y: auto;
+}
+
+.food-result-item {
+  background: #f8f8f8;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+}
+
+.food-result-item:hover {
+  background: #eef7ff;
+  border-color: #b9d7ec;
+}
+
+.result-name {
+  color: #333;
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.result-meta {
+  color: #666;
+  display: block;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .diary-container {
+    margin: 20px 10px;
+  }
+
+  .diary-header,
+  .diary-widgets,
+  .food-search-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .water-consumption,
+  .food-notes {
+    width: 100%;
+  }
+
+  .dashboard {
+    font-size: 11px;
+  }
+
+  .dashboard thead th.meal-col,
+  .section-header td {
+    font-size: 16px;
+  }
+}
+
+/* Locked diary state */
+.locked-day .add-food-link,
+.locked-day .remove-food,
+.locked-day .quick-add button,
+.locked-day .btn-add,
+.locked-day .btn-complete,
+.locked-day .custom-cups,
+.locked-day textarea {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.locked-day .complete-entry {
+  border-left: 4px solid #cc3300;
+  background: #fff7f2;
+}
+
+.locked-food-label {
+  display: inline-block;
+  margin-top: 6px;
+  color: #777;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.disabled-link {
+  pointer-events: none;
+  color: #999 !important;
+  text-decoration: none !important;
+}
