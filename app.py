@@ -169,9 +169,24 @@ def check_in():
 
     return render_template('Check-In/Check-In.html')
 
-@app.route('/food_diary')
+@app.route('/food_diary', methods=['GET', 'POST'])
 def food_diary():
-    return render_template('Food-Diary/Food-Diary.html') if 'user_id' in session else redirect(url_for('login'))
+    if request.method == 'POST':
+        calories = request.form.get('calories')
+        carbs = request.form.get('carbs')
+        fat = request.form.get('fat')
+        protein = request.form.get('protein')
+        sodium = request.form.get('sodium')
+        sugar = request.form.get('sugar')
+        entry_date = request.form.get('date')
+        user_id = session['user_id']
+    else:
+        target_date = request.args.get('date')
+        if not target_date:
+            target_date = date.today().strftime('%Y-%m-%d')
+        print(f"Retrieving diary entries for user {session['user_id']} on {target_date}")
+
+    return render_template('Food-Diary/Food-Diary.html', current_date=target_date)
 
 @app.route('/charts')
 def charts():
