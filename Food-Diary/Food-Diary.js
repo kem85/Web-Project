@@ -9,34 +9,257 @@ const DAILY_GOALS = {
   sugar: 80,
 };
 
-
-
 const FALLBACK_FOODS = [
-  { name: "Egg, boiled", servingSize: "1 large egg", calories: 78, carbs: 0.6, fat: 5.3, protein: 6.3, sodium: 62, sugar: 0.6 },
-  { name: "Egg, fried", servingSize: "1 large egg", calories: 90, carbs: 0.4, fat: 7, protein: 6.3, sodium: 95, sugar: 0.4 },
-  { name: "White rice, cooked", servingSize: "1 cup cooked", calories: 205, carbs: 45, fat: 0.4, protein: 4.3, sodium: 2, sugar: 0.1 },
-  { name: "Brown rice, cooked", servingSize: "1 cup cooked", calories: 216, carbs: 45, fat: 1.8, protein: 5, sodium: 10, sugar: 0.7 },
-  { name: "Chicken breast, cooked", servingSize: "100 g", calories: 165, carbs: 0, fat: 3.6, protein: 31, sodium: 74, sugar: 0 },
-  { name: "Chicken thigh, cooked", servingSize: "100 g", calories: 209, carbs: 0, fat: 10.9, protein: 26, sodium: 82, sugar: 0 },
-  { name: "Banana", servingSize: "1 medium", calories: 105, carbs: 27, fat: 0.4, protein: 1.3, sodium: 1, sugar: 14 },
-  { name: "Apple", servingSize: "1 medium", calories: 95, carbs: 25, fat: 0.3, protein: 0.5, sodium: 2, sugar: 19 },
-  { name: "Milk, whole", servingSize: "1 cup", calories: 149, carbs: 12, fat: 8, protein: 7.7, sodium: 105, sugar: 12 },
-  { name: "Milk, low fat", servingSize: "1 cup", calories: 102, carbs: 12, fat: 2.4, protein: 8.2, sodium: 107, sugar: 12 },
-  { name: "Bread, white", servingSize: "1 slice", calories: 80, carbs: 15, fat: 1, protein: 2.7, sodium: 150, sugar: 1.5 },
-  { name: "Bread, whole wheat", servingSize: "1 slice", calories: 81, carbs: 14, fat: 1.1, protein: 4, sodium: 144, sugar: 1.6 },
-  { name: "Oats", servingSize: "40 g dry", calories: 150, carbs: 27, fat: 3, protein: 5, sodium: 0, sugar: 1 },
-  { name: "Pasta, cooked", servingSize: "1 cup cooked", calories: 200, carbs: 42, fat: 1.2, protein: 7, sodium: 1, sugar: 1.2 },
-  { name: "Potato, baked", servingSize: "1 medium", calories: 161, carbs: 37, fat: 0.2, protein: 4.3, sodium: 17, sugar: 2 },
-  { name: "Greek yogurt, plain", servingSize: "170 g", calories: 100, carbs: 6, fat: 0.7, protein: 17, sodium: 61, sugar: 5 },
-  { name: "Tuna, canned in water", servingSize: "100 g", calories: 116, carbs: 0, fat: 1, protein: 26, sodium: 338, sugar: 0 },
-  { name: "Salmon, cooked", servingSize: "100 g", calories: 206, carbs: 0, fat: 12, protein: 22, sodium: 59, sugar: 0 },
-  { name: "Beef steak, cooked", servingSize: "100 g", calories: 271, carbs: 0, fat: 19, protein: 25, sodium: 58, sugar: 0 },
-  { name: "Almonds", servingSize: "28 g", calories: 164, carbs: 6, fat: 14, protein: 6, sodium: 0, sugar: 1.2 },
-  { name: "Peanut butter", servingSize: "2 tbsp", calories: 188, carbs: 6, fat: 16, protein: 8, sodium: 147, sugar: 3 },
-  { name: "Orange", servingSize: "1 medium", calories: 62, carbs: 15, fat: 0.2, protein: 1.2, sodium: 0, sugar: 12 },
-  { name: "Tomato", servingSize: "1 medium", calories: 22, carbs: 4.8, fat: 0.2, protein: 1.1, sodium: 6, sugar: 3.2 },
-  { name: "Cucumber", servingSize: "100 g", calories: 15, carbs: 3.6, fat: 0.1, protein: 0.7, sodium: 2, sugar: 1.7 },
-  { name: "Lentils, cooked", servingSize: "1 cup cooked", calories: 230, carbs: 40, fat: 0.8, protein: 18, sodium: 4, sugar: 3.6 },
+  {
+    name: "Egg, boiled",
+    servingSize: "1 large egg",
+    calories: 78,
+    carbs: 0.6,
+    fat: 5.3,
+    protein: 6.3,
+    sodium: 62,
+    sugar: 0.6,
+  },
+  {
+    name: "Egg, fried",
+    servingSize: "1 large egg",
+    calories: 90,
+    carbs: 0.4,
+    fat: 7,
+    protein: 6.3,
+    sodium: 95,
+    sugar: 0.4,
+  },
+  {
+    name: "White rice, cooked",
+    servingSize: "1 cup cooked",
+    calories: 205,
+    carbs: 45,
+    fat: 0.4,
+    protein: 4.3,
+    sodium: 2,
+    sugar: 0.1,
+  },
+  {
+    name: "Brown rice, cooked",
+    servingSize: "1 cup cooked",
+    calories: 216,
+    carbs: 45,
+    fat: 1.8,
+    protein: 5,
+    sodium: 10,
+    sugar: 0.7,
+  },
+  {
+    name: "Chicken breast, cooked",
+    servingSize: "100 g",
+    calories: 165,
+    carbs: 0,
+    fat: 3.6,
+    protein: 31,
+    sodium: 74,
+    sugar: 0,
+  },
+  {
+    name: "Chicken thigh, cooked",
+    servingSize: "100 g",
+    calories: 209,
+    carbs: 0,
+    fat: 10.9,
+    protein: 26,
+    sodium: 82,
+    sugar: 0,
+  },
+  {
+    name: "Banana",
+    servingSize: "1 medium",
+    calories: 105,
+    carbs: 27,
+    fat: 0.4,
+    protein: 1.3,
+    sodium: 1,
+    sugar: 14,
+  },
+  {
+    name: "Apple",
+    servingSize: "1 medium",
+    calories: 95,
+    carbs: 25,
+    fat: 0.3,
+    protein: 0.5,
+    sodium: 2,
+    sugar: 19,
+  },
+  {
+    name: "Milk, whole",
+    servingSize: "1 cup",
+    calories: 149,
+    carbs: 12,
+    fat: 8,
+    protein: 7.7,
+    sodium: 105,
+    sugar: 12,
+  },
+  {
+    name: "Milk, low fat",
+    servingSize: "1 cup",
+    calories: 102,
+    carbs: 12,
+    fat: 2.4,
+    protein: 8.2,
+    sodium: 107,
+    sugar: 12,
+  },
+  {
+    name: "Bread, white",
+    servingSize: "1 slice",
+    calories: 80,
+    carbs: 15,
+    fat: 1,
+    protein: 2.7,
+    sodium: 150,
+    sugar: 1.5,
+  },
+  {
+    name: "Bread, whole wheat",
+    servingSize: "1 slice",
+    calories: 81,
+    carbs: 14,
+    fat: 1.1,
+    protein: 4,
+    sodium: 144,
+    sugar: 1.6,
+  },
+  {
+    name: "Oats",
+    servingSize: "40 g dry",
+    calories: 150,
+    carbs: 27,
+    fat: 3,
+    protein: 5,
+    sodium: 0,
+    sugar: 1,
+  },
+  {
+    name: "Pasta, cooked",
+    servingSize: "1 cup cooked",
+    calories: 200,
+    carbs: 42,
+    fat: 1.2,
+    protein: 7,
+    sodium: 1,
+    sugar: 1.2,
+  },
+  {
+    name: "Potato, baked",
+    servingSize: "1 medium",
+    calories: 161,
+    carbs: 37,
+    fat: 0.2,
+    protein: 4.3,
+    sodium: 17,
+    sugar: 2,
+  },
+  {
+    name: "Greek yogurt, plain",
+    servingSize: "170 g",
+    calories: 100,
+    carbs: 6,
+    fat: 0.7,
+    protein: 17,
+    sodium: 61,
+    sugar: 5,
+  },
+  {
+    name: "Tuna, canned in water",
+    servingSize: "100 g",
+    calories: 116,
+    carbs: 0,
+    fat: 1,
+    protein: 26,
+    sodium: 338,
+    sugar: 0,
+  },
+  {
+    name: "Salmon, cooked",
+    servingSize: "100 g",
+    calories: 206,
+    carbs: 0,
+    fat: 12,
+    protein: 22,
+    sodium: 59,
+    sugar: 0,
+  },
+  {
+    name: "Beef steak, cooked",
+    servingSize: "100 g",
+    calories: 271,
+    carbs: 0,
+    fat: 19,
+    protein: 25,
+    sodium: 58,
+    sugar: 0,
+  },
+  {
+    name: "Almonds",
+    servingSize: "28 g",
+    calories: 164,
+    carbs: 6,
+    fat: 14,
+    protein: 6,
+    sodium: 0,
+    sugar: 1.2,
+  },
+  {
+    name: "Peanut butter",
+    servingSize: "2 tbsp",
+    calories: 188,
+    carbs: 6,
+    fat: 16,
+    protein: 8,
+    sodium: 147,
+    sugar: 3,
+  },
+  {
+    name: "Orange",
+    servingSize: "1 medium",
+    calories: 62,
+    carbs: 15,
+    fat: 0.2,
+    protein: 1.2,
+    sodium: 0,
+    sugar: 12,
+  },
+  {
+    name: "Tomato",
+    servingSize: "1 medium",
+    calories: 22,
+    carbs: 4.8,
+    fat: 0.2,
+    protein: 1.1,
+    sodium: 6,
+    sugar: 3.2,
+  },
+  {
+    name: "Cucumber",
+    servingSize: "100 g",
+    calories: 15,
+    carbs: 3.6,
+    fat: 0.1,
+    protein: 0.7,
+    sodium: 2,
+    sugar: 1.7,
+  },
+  {
+    name: "Lentils, cooked",
+    servingSize: "1 cup cooked",
+    calories: 230,
+    carbs: 40,
+    fat: 0.8,
+    protein: 18,
+    sodium: 4,
+    sugar: 3.6,
+  },
 ];
 
 const diaryState = {
@@ -50,6 +273,7 @@ let activeMeal = "Breakfast";
 let currentResults = [];
 let selectedDateLocked = false;
 let selectedDateLockReason = "";
+let selectedDateCompleted = false;
 
 function getDateKey(date = selectedDate) {
   return date.toISOString().slice(0, 10);
@@ -79,7 +303,10 @@ function escapeHTML(value) {
 }
 
 function getLockMessage() {
-  return selectedDateLockReason || "This diary entry is locked. Only today's unfinished entry can be changed.";
+  return (
+    selectedDateLockReason ||
+    "This diary entry is locked. Only today's unfinished entry can be changed."
+  );
 }
 
 function showLockedMessage() {
@@ -178,7 +405,10 @@ function renderMealRows() {
 
   tbody.innerHTML = MEALS.map((meal, mealIndex) => {
     const foods = foodsByMeal[meal];
-    const sectionHeader = mealIndex === 0 ? "" : `
+    const sectionHeader =
+      mealIndex === 0
+        ? ""
+        : `
       <tr class="section-header">
         <td colspan="7">${meal}</td>
       </tr>
@@ -234,6 +464,7 @@ function applyServerDiaryPayload(payload) {
 
   selectedDateLocked = Boolean(payload.locked);
   selectedDateLockReason = payload.lockReason || "";
+  selectedDateCompleted = Boolean(payload.completed);
 
   const key = getDateKey();
   if (Object.prototype.hasOwnProperty.call(payload, "waterCups")) {
@@ -316,7 +547,10 @@ function pickNutrient(nutrients, names) {
 
 function normalizeOpenFoodFactsProduct(product) {
   const nutrients = product.nutriments || {};
-  const name = product.product_name || product.generic_name || product.abbreviated_product_name;
+  const name =
+    product.product_name ||
+    product.generic_name ||
+    product.abbreviated_product_name;
 
   if (!name) return null;
 
@@ -329,17 +563,29 @@ function normalizeOpenFoodFactsProduct(product) {
   if (!calories) return null;
 
   const usedServingValue = toNumber(nutrients["energy-kcal_serving"]) > 0;
-  const servingSize = product.serving_size || (usedServingValue ? "1 serving" : "100 g");
+  const servingSize =
+    product.serving_size || (usedServingValue ? "1 serving" : "100 g");
   const brand = product.brands ? ` (${product.brands.split(",")[0]})` : "";
 
   return {
     name: `${name}${brand}`,
     servingSize,
     calories: Math.round(calories),
-    carbs: pickNutrient(nutrients, ["carbohydrates_serving", "carbohydrates_100g", "carbohydrates"]),
+    carbs: pickNutrient(nutrients, [
+      "carbohydrates_serving",
+      "carbohydrates_100g",
+      "carbohydrates",
+    ]),
     fat: pickNutrient(nutrients, ["fat_serving", "fat_100g", "fat"]),
-    protein: pickNutrient(nutrients, ["proteins_serving", "proteins_100g", "proteins"]),
-    sodium: Math.round(pickNutrient(nutrients, ["sodium_serving", "sodium_100g", "sodium"]) * 1000),
+    protein: pickNutrient(nutrients, [
+      "proteins_serving",
+      "proteins_100g",
+      "proteins",
+    ]),
+    sodium: Math.round(
+      pickNutrient(nutrients, ["sodium_serving", "sodium_100g", "sodium"]) *
+        1000,
+    ),
     sugar: pickNutrient(nutrients, ["sugars_serving", "sugars_100g", "sugars"]),
   };
 }
@@ -362,9 +608,13 @@ function searchFallbackFoods(query) {
 
   return FALLBACK_FOODS.filter((food) => {
     const searchText = `${food.name} ${food.servingSize}`.toLowerCase();
-    return queryWords.every((word) => searchText.includes(word)) ||
-      queryWords.some((word) => searchText.includes(word));
-  }).slice(0, 10).map(normalizeFood);
+    return (
+      queryWords.every((word) => searchText.includes(word)) ||
+      queryWords.some((word) => searchText.includes(word))
+    );
+  })
+    .slice(0, 10)
+    .map(normalizeFood);
 }
 
 async function searchFoods(query) {
@@ -387,7 +637,10 @@ async function searchFoods(query) {
   try {
     const directUrl = new URL("https://world.openfoodfacts.org/api/v2/search");
     directUrl.searchParams.set("search_terms", query);
-    directUrl.searchParams.set("fields", "product_name,generic_name,abbreviated_product_name,brands,serving_size,nutriments");
+    directUrl.searchParams.set(
+      "fields",
+      "product_name,generic_name,abbreviated_product_name,brands,serving_size,nutriments",
+    );
     directUrl.searchParams.set("page_size", "20");
     directUrl.searchParams.set("sort_by", "unique_scans_n");
 
@@ -470,7 +723,8 @@ async function handleFoodSearch(event) {
     renderSearchResults(currentResults);
   } catch (error) {
     console.error(error);
-    status.textContent = "Food search failed. Check your internet connection or run the Flask server, then try again.";
+    status.textContent =
+      "Food search failed. Check your internet connection or run the Flask server, then try again.";
     status.className = "search-status error";
   }
 }
@@ -525,7 +779,9 @@ async function removeFoodFromMeal(meal, index) {
 
     if (!response.ok) {
       const errorPayload = await response.json().catch(() => ({}));
-      throw new Error(errorPayload.error || "Could not remove food from server.");
+      throw new Error(
+        errorPayload.error || "Could not remove food from server.",
+      );
     }
     const payload = await response.json();
     applyServerDiaryPayload(payload);
@@ -556,15 +812,29 @@ function updateLockUI() {
 
   container?.classList.toggle("locked-day", selectedDateLocked);
 
+  const isToday = getDateKey() === new Date().toISOString().slice(0, 10);
+  const canUnlock = isToday && selectedDateCompleted;
+
   if (completeText) {
-    completeText.textContent = selectedDateLocked
-      ? getLockMessage()
-      : "When you're finished logging all foods and exercise for this day, click here:";
+    if (canUnlock) {
+      completeText.textContent = "This entry is completed. Click below to edit again.";
+    } else {
+      completeText.textContent = selectedDateLocked
+        ? getLockMessage()
+        : "When you're finished logging all foods and exercise for this day, click here:";
+    }
   }
 
   if (completeButton) {
-    completeButton.disabled = selectedDateLocked;
-    completeButton.textContent = selectedDateLocked ? "Entry Locked" : "Complete This Entry";
+    if (canUnlock) {
+      completeButton.disabled = false;
+      completeButton.textContent = "Edit This Entry";
+    } else {
+      completeButton.disabled = selectedDateLocked;
+      completeButton.textContent = selectedDateLocked
+        ? "Entry Locked"
+        : "Complete This Entry";
+    }
   }
 
   if (customInput) customInput.disabled = selectedDateLocked;
@@ -575,7 +845,9 @@ function updateLockUI() {
 
   if (notesArea) {
     notesArea.disabled = selectedDateLocked;
-    notesArea.placeholder = selectedDateLocked ? "This day is locked." : "Write a note...";
+    notesArea.placeholder = selectedDateLocked
+      ? "This day is locked."
+      : "Write a note...";
   }
 
   if (editNote) {
@@ -640,7 +912,8 @@ async function updateWaterOnServer(cups, action = "add") {
     } else if (action === "reset") {
       diaryState.waterByDate[key] = 0;
     } else {
-      diaryState.waterByDate[key] = Number(diaryState.waterByDate[key] || 0) + cups;
+      diaryState.waterByDate[key] =
+        Number(diaryState.waterByDate[key] || 0) + cups;
     }
   }
 
@@ -682,7 +955,8 @@ async function saveNotesToServer(notes) {
 }
 
 async function renderPage() {
-  document.querySelector(".current-date").textContent = formatDate(selectedDate);
+  document.querySelector(".current-date").textContent =
+    formatDate(selectedDate);
   await loadDiaryFromServer();
   renderMealRows();
   renderWaterAndNotes();
@@ -726,7 +1000,10 @@ function initFoodDiary() {
   });
 
   modal.addEventListener("click", (event) => {
-    if (event.target === modal || event.target.classList.contains("modal-close")) {
+    if (
+      event.target === modal ||
+      event.target.classList.contains("modal-close")
+    ) {
       closeFoodModal();
     }
   });
@@ -780,12 +1057,49 @@ function initFoodDiary() {
   });
 
   completeButton.addEventListener("click", async () => {
-    if (!canEditSelectedDate()) {
+    const isToday = getDateKey() === new Date().toISOString().slice(0, 10);
+    const isUnlocking = isToday && selectedDateCompleted;
+
+    if (!canEditSelectedDate() && !isUnlocking) {
       showLockedMessage();
       return;
     }
 
-    const confirmed = window.confirm("Complete and lock this entry? You will not be able to edit foods, water, or notes for this day.");
+    if (isUnlocking) {
+      const confirmed = window.confirm("Unlock this entry to edit it again?");
+      if (!confirmed) return;
+
+      completeButton.textContent = "Unlocking...";
+      completeButton.disabled = true;
+
+      try {
+        const response = await fetch("/api/diary/unlock", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ date: getDateKey() }),
+        });
+
+        if (!response.ok) {
+          const errorPayload = await response.json().catch(() => ({}));
+          throw new Error(errorPayload.error || "Could not unlock entry.");
+        }
+
+        const payload = await response.json();
+        applyServerDiaryPayload(payload);
+      } catch (error) {
+        selectedDateLocked = true;
+        selectedDateLockReason = error.message || "This entry is locked.";
+        showLockedMessage();
+      }
+
+      renderMealRows();
+      renderWaterAndNotes();
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Complete and lock this entry? You will not be able to edit foods, water, or notes for this day.",
+    );
     if (!confirmed) return;
 
     completeButton.textContent = "Completing...";

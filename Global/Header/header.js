@@ -1,8 +1,9 @@
 function getDisplayName() {
   // Check if the global variable exists; if not, default to "User"
-  return window.dbUsername && window.dbUsername !== "None" ? window.dbUsername : "User";
+  return window.dbUsername && window.dbUsername !== "None"
+    ? window.dbUsername
+    : "User";
 }
-
 function createHeader() {
   const header = document.getElementsByClassName("header")[0];
   if (!header) return;

@@ -7,7 +7,7 @@ function setNavItems(items) {
       ${items
         .map(
           (item) =>
-            `<li class="${item.active ? "active" : ""}"><a href="${item.href}">${item.label}</a></li>`
+            `<li class="${item.active ? "active" : ""}"><a href="${item.href}">${item.label}</a></li>`,
         )
         .join("")}
     </ul>

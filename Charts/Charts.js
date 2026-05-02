@@ -1,13 +1,14 @@
 const REPORTS = {
   weight: { label: "Weight", unit: "kg", type: "line" },
   steps: { label: "Steps", unit: "steps", type: "bar" },
-  calories: { label: "Calories Goal", unit: "kcal", type: "line" },
+  calories: { label: "Calories", unit: "kcal", type: "line" },
   water: { label: "Water Intake", unit: "cups", type: "bar" },
 };
 
 let currentReport = "weight";
 let currentDays = 7;
 let currentRows = [];
+let allChartData = [];
 
 function toNumber(value) {
   const numberValue = Number(value);
@@ -36,31 +37,10 @@ function filterByPeriod(rows, days) {
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
-function getCheckInRows(metric) {
-  return [];
-}
-
-function getCaloriesRows() {
-  return [{ date: todayISO(), value: 1930 }];
-}
-
-function getWaterRows() {
-  return [];
-}
-
 function getRowsForReport(reportKey) {
-  switch (reportKey) {
-    case "weight":
-      return getCheckInRows("weight");
-    case "steps":
-      return getCheckInRows("steps");
-    case "calories":
-      return getCaloriesRows();
-    case "water":
-      return getWaterRows();
-    default:
-      return [];
-  }
+  return allChartData
+    .map(row => ({ date: row.date, value: toNumber(row[reportKey]) }))
+    .filter(row => row.value !== null && row.value > 0);
 }
 
 function resizeCanvas(canvas) {
@@ -87,9 +67,17 @@ function drawEmptyState(ctx, width, height, report) {
   ctx.fillStyle = "#777";
   ctx.font = "16px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(`No ${report.label.toLowerCase()} data saved yet`, width / 2, height / 2 - 8);
+  ctx.fillText(
+    `No ${report.label.toLowerCase()} data saved yet`,
+    width / 2,
+    height / 2 - 8,
+  );
   ctx.font = "13px Arial";
-  ctx.fillText("Add values in Check-In or Food Diary, then come back here.", width / 2, height / 2 + 18);
+  ctx.fillText(
+    "Add values in Check-In or Food Diary, then come back here.",
+    width / 2,
+    height / 2 + 18,
+  );
 }
 
 function drawChart(rows, report) {
@@ -150,7 +138,10 @@ function drawChart(rows, report) {
   ctx.stroke();
 
   if (report.type === "bar") {
-    const barWidth = Math.max(12, Math.min(46, chartWidth / Math.max(rows.length, 1) - 12));
+    const barWidth = Math.max(
+      12,
+      Math.min(46, chartWidth / Math.max(rows.length, 1) - 12),
+    );
     rows.forEach((row, index) => {
       const x = xForIndex(index) - barWidth / 2;
       const y = yForValue(row.value);
@@ -219,6 +210,18 @@ function updateChart() {
   drawChart(currentRows, report);
 }
 
+async function loadChartData() {
+  try {
+    const response = await fetch('/api/charts/data');
+    if (response.ok) {
+      allChartData = await response.json();
+    }
+  } catch (error) {
+    console.error("Failed to load chart data:", error);
+  }
+  updateChart();
+}
+
 function exportCurrentChart() {
   const report = REPORTS[currentReport];
   const header = "date,value,unit\n";
@@ -257,7 +260,7 @@ function initChartsPage() {
   exportBtn.addEventListener("click", exportCurrentChart);
   window.addEventListener("resize", updateChart);
 
-  updateChart();
+  loadChartData();
 }
 
 document.addEventListener("DOMContentLoaded", initChartsPage);

@@ -1,66 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings</title>
-  <link rel="stylesheet" href="/Global/Header/header.css">
-  <link rel="stylesheet" href="/Settings/Settings.css">
-</head>
-<body>
-  <header class="header"></header>
+  <head>
+    <meta charset="UTF-8" />
+    <script>window.dbUsername = "{{ username }}";</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <link rel="stylesheet" href="/Global/Header/header.css" />
+    <link rel="stylesheet" href="/Settings/Settings.css" />
+  </head>
+  <body>
+    <header class="header"></header>
 
-  <main class="settings-page">
-    <section class="settings-card">
-      <h1>Settings</h1>
-      <p class="settings-note">This page lets you edit your profile details without opening the modal on the profile page.</p>
+    <main class="settings-page">
+      <section class="settings-card">
+        <h1>Settings</h1>
+        <p class="settings-note">
+          Edit your profile details here. These changes will reflect on your
+          profile page.
+        </p>
 
-      <form id="settingsForm" class="settings-form">
-        <label>
-          Full name
-          <input type="text" id="nameInput" placeholder="Your name" required>
-        </label>
+        <form
+          id="settingsForm"
+          class="settings-form"
+          method="POST"
+          action="/settings"
+        >
+          <label>
+            Full name
+            <input
+              type="text"
+              name="username"
+              id="nameInput"
+              placeholder="Your name"
+              value="{{ user.username or '' }}"
+              required
+            />
+          </label>
 
-        <label>
-          Age
-          <input type="number" id="ageInput" min="1" max="120" placeholder="Age">
-        </label>
+          <label>
+            Age
+            <input
+              type="number"
+              name="age"
+              id="ageInput"
+              min="1"
+              max="120"
+              placeholder="Age"
+              value="{{ user.age or '' }}"
+            />
+          </label>
 
-        <label>
-          Gender
-          <select id="genderInput">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </label>
+          <label>
+            Gender
+            <select name="gender" id="genderInput">
+              <option value="Male" {% if user.gender == "Male" %}selected{% endif %}>
+                Male
+              </option>
+              <option value="Female" {% if user.gender == "Female" %}selected{% endif %}>
+                Female
+              </option>
+              <option value="Other" {% if user.gender == "Other" %}selected{% endif %}>
+                Other
+              </option>
+            </select>
+          </label>
 
-        <label>
-          About me
-          <textarea id="aboutInput" rows="3" placeholder="Tell us about yourself..."></textarea>
-        </label>
+          <label>
+            About me
+            <textarea
+              name="about_me"
+              id="aboutInput"
+              rows="3"
+              placeholder="Tell us about yourself..."
+            >{{ user.about_me or '' }}</textarea>
+          </label>
 
-        <label>
-          Why I want to get in shape
-          <textarea id="whyInput" rows="3" placeholder="Your motivation..."></textarea>
-        </label>
+          <label>
+            Why I want to get in shape
+            <textarea
+              name="motivation"
+              id="whyInput"
+              rows="3"
+              placeholder="Your motivation..."
+            >{{ user.motivation or '' }}</textarea>
+          </label>
 
-        <label>
-          My inspirations
-          <textarea id="inspoInput" rows="3" placeholder="Who or what inspires you..."></textarea>
-        </label>
+          <label>
+            My inspirations
+            <textarea
+              name="inspiration"
+              id="inspoInput"
+              rows="3"
+              placeholder="Who or what inspires you..."
+            >{{ user.inspiration or '' }}</textarea>
+          </label>
 
-        <div class="button-row">
-          <button type="button" id="cancelBtn" class="secondary">Cancel</button>
-          <button type="submit" class="primary">Save Changes</button>
-        </div>
-      </form>
+          <div class="button-row">
+            <a
+              href="/profile"
+              id="cancelBtn"
+              class="secondary"
+              style="
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              Cancel
+            </a>
+            <button type="submit" class="primary">Save Changes</button>
+          </div>
+        </form>
 
-      <div id="saveMessage" class="save-message" hidden>Profile saved successfully.</div>
-    </section>
-  </main>
+        {% with messages = get_flashed_messages() %} 
+          {% if messages %}
+            <div id="saveMessage" class="save-message">{{ messages[0] }}</div>
+          {% endif %} 
+        {% endwith %}
+      </section>
+    </main>
 
-  <script src="/Global/Header/header.js"></script>
-  <script src="/Settings/Settings.js"></script>
-</body>
+    <script src="/Global/Header/header.js"></script>
+    <script src="/Settings/Settings.js"></script>
+  </body>
 </html>

@@ -114,8 +114,8 @@ a {
   display: flex;
   align-items: center;
   margin-bottom: 25px;
-  padding-bottom: 15px; 
-  border-bottom: 1px solid #eaeaea; 
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaeaea;
 }
 
 .diary-header > span {
@@ -175,21 +175,32 @@ a {
 }
 
 /* Enforcing standard table layout behaviors */
-.dashboard thead { display: table-header-group !important; }
-.dashboard tbody { display: table-row-group !important; }
-.dashboard tfoot { display: table-footer-group !important; }
-.dashboard tr { display: table-row !important; }
-.dashboard th, .dashboard td { display: table-cell !important; }
+.dashboard thead {
+  display: table-header-group !important;
+}
+.dashboard tbody {
+  display: table-row-group !important;
+}
+.dashboard tfoot {
+  display: table-footer-group !important;
+}
+.dashboard tr {
+  display: table-row !important;
+}
+.dashboard th,
+.dashboard td {
+  display: table-cell !important;
+}
 
 /* Sets Column 1 (Meals) to 40% width, and Macros to 10% each */
-.dashboard th:first-child, 
+.dashboard th:first-child,
 .dashboard td:first-child {
-  width: 40%;       
+  width: 40%;
   text-align: left;
 }
-.dashboard th:not(:first-child), 
+.dashboard th:not(:first-child),
 .dashboard td:not(:first-child) {
-  width: 10%;       
+  width: 10%;
   text-align: center;
 }
 
@@ -282,13 +293,14 @@ a {
 }
 
 /* MyFitnessPal Green text for remaining numbers */
-.remaining-row td, .positive {
-  color: #589442; 
+.remaining-row td,
+.positive {
+  color: #589442;
 }
 
 /* Keeps the word "Remaining" dark instead of green */
 .remaining-row .label {
-  color: #333; 
+  color: #333;
 }
 
 /* ==========================================================
@@ -329,15 +341,16 @@ a {
 .diary-widgets {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid #eaeaea; 
+  border-top: 1px solid #eaeaea;
   padding-top: 20px;
   margin-top: 30px;
 }
 
 /* Makes each box take up just under half the width */
-.water-consumption, .food-notes {
+.water-consumption,
+.food-notes {
   width: 48%;
-  border: 1px solid #eaeaea; 
+  border: 1px solid #eaeaea;
   padding: 15px;
   box-sizing: border-box;
 }
@@ -359,7 +372,10 @@ a {
 }
 
 /* Links inside the widgets */
-.edit-note, .water-amount a, .water-desc a, .quick-add button {
+.edit-note,
+.water-amount a,
+.water-desc a,
+.quick-add button {
   color: #00a1e4;
   text-decoration: none;
   font-size: 12px;

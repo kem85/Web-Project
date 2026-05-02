@@ -2,215 +2,218 @@
    GENERAL STYLES
 ======================= */
 
-body{
-font-family: Arial, sans-serif;
-margin:0;
-padding: 0px;
-background:#f5f5f5;
-color:#333;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0px;
+  background: #f5f5f5;
+  color: #333;
 }
 
-a{
-text-decoration:none;
-color:inherit;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 /* =======================
    PAGE TITLE
 ======================= */
 
-.page-title{
-padding:25px 40px;
-padding-right: 0px;
+.page-title {
+  padding: 25px 40px;
+  padding-right: 0px;
 }
 
-.page-title h2{
-margin:0;
-font-size:26px;
+.page-title h2 {
+  margin: 0;
+  font-size: 26px;
 }
 
-.title-left{
-display:flex;
-align-items:center;
-gap:16px;
+.title-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.user-photo{
-width:40px;
-height:40px;
-border-radius:50%;
-object-fit:cover;
+.user-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 /* =======================
    DASHBOARD PAGE
 ======================= */
 
-.dashboard{
-display:flex;
-gap:40px;
-padding:40px;
-flex-wrap:wrap;
+.dashboard {
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  flex-wrap: wrap;
 }
 
 .nutrition-card,
-.calories-card{
-background:white;
-padding:25px;
-border-radius:10px;
-width:350px;
-box-shadow:0 2px 8px rgba(0,0,0,0.05);
+.calories-card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.calories-input{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
+.calories-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.calories-input input{
-padding:8px;
-width:100px;
+.calories-input input {
+  padding: 8px;
+  width: 100px;
 }
 
-.macro-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
+.macro-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
 }
 
-.macro-table th{
-background:#1a73e8;
-color:white;
-padding:8px;
+.macro-table th {
+  background: #1a73e8;
+  color: white;
+  padding: 8px;
 }
 
-.macro-table td{
-border:1px solid #ddd;
-padding:8px;
-text-align:center;
+.macro-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
 }
 
 /* =======================
    FUNCTIONAL CALORIE CIRCLE
 ======================= */
 
-.progress-circle{
-display:flex;
-justify-content:center;
-align-items:center;
-margin:25px 0 28px;
+.progress-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 25px 0 28px;
 }
 
-.circle{
---progress-deg: 0deg;
-width:160px;
-height:160px;
-border-radius:50%;
-background:conic-gradient(#1a73e8 0deg var(--progress-deg), #e5e5e5 var(--progress-deg) 360deg);
-display:flex;
-justify-content:center;
-align-items:center;
-transition:background 0.3s ease;
+.circle {
+  --progress-deg: 0deg;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #1a73e8 0deg var(--progress-deg),
+    #e5e5e5 var(--progress-deg) 360deg
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s ease;
 }
 
-.circle-inner{
-width:116px;
-height:116px;
-border-radius:50%;
-background:white;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
+.circle-inner {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.circle-inner span{
-font-size:30px;
-font-weight:bold;
-color:#1f2937;
-line-height:1;
+.circle-inner span {
+  font-size: 30px;
+  font-weight: bold;
+  color: #1f2937;
+  line-height: 1;
 }
 
-.circle-inner small{
-margin-top:8px;
-font-size:13px;
-color:#666;
+.circle-inner small {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #666;
 }
 
-.summary p{
-font-size:16px;
-margin:14px 0;
+.summary p {
+  font-size: 16px;
+  margin: 14px 0;
 }
 
 /* =======================
    CHECK-IN PAGE STYLES KEPT
 ======================= */
 
-.inputs{
-display:flex;
-gap:60px;
-margin-bottom:20px;
+.inputs {
+  display: flex;
+  gap: 60px;
+  margin-bottom: 20px;
 }
 
-.input-box{
-display:flex;
-flex-direction:column;
+.input-box {
+  display: flex;
+  flex-direction: column;
 }
 
-.input-box label{
-font-weight:bold;
-margin-bottom:5px;
+.input-box label {
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.input-box input{
-width:150px;
-padding:10px;
-border:1px solid #ccc;
-border-radius:4px;
+.input-box input {
+  width: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.last-weight{
-margin:20px 0;
-color:#777;
+.last-weight {
+  margin: 20px 0;
+  color: #777;
 }
 
-.measurements{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-background:white;
+.measurements {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
 }
 
-.measurements th{
-background:#1a73e8;
-color:white;
-padding:12px;
-text-align:center;
+.measurements th {
+  background: #1a73e8;
+  color: white;
+  padding: 12px;
+  text-align: center;
 }
 
-.measurements td{
-border:1px solid #ddd;
-padding:10px;
-text-align:center;
+.measurements td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
 }
 
-.measurements input{
-padding:8px;
-width:100px;
-border:1px solid #ccc;
-border-radius:4px;
+.measurements input {
+  padding: 8px;
+  width: 100px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-@media (max-width: 800px){
-.dashboard{
-padding:20px;
-}
+@media (max-width: 800px) {
+  .dashboard {
+    padding: 20px;
+  }
 
-.nutrition-card,
-.calories-card{
-width:100%;
-}
+  .nutrition-card,
+  .calories-card {
+    width: 100%;
+  }
 }

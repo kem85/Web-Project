@@ -66,17 +66,37 @@ function syncSelectValues(elements) {
 function updateMacroTable(elements) {
   const totalPercent = getTotalPercent();
 
-  elements.carbGram.textContent = calculateMacroGrams(state.calories, state.carbsPercent, 4);
-  elements.fatGram.textContent = calculateMacroGrams(state.calories, state.fatPercent, 9);
-  elements.proteinGram.textContent = calculateMacroGrams(state.calories, state.proteinPercent, 4);
+  elements.carbGram.textContent = calculateMacroGrams(
+    state.calories,
+    state.carbsPercent,
+    4,
+  );
+  elements.fatGram.textContent = calculateMacroGrams(
+    state.calories,
+    state.fatPercent,
+    9,
+  );
+  elements.proteinGram.textContent = calculateMacroGrams(
+    state.calories,
+    state.proteinPercent,
+    4,
+  );
   elements.totalPercent.textContent = totalPercent;
-  elements.totalCalories.textContent = roundValue(state.calories * (totalPercent / 100));
+  elements.totalCalories.textContent = roundValue(
+    state.calories * (totalPercent / 100),
+  );
 }
 
 function updateCaloriesCard(elements) {
-  const remainingCalories = state.calories - state.foodCalories + state.exerciseCalories;
-  const consumedCalories = Math.max(0, state.foodCalories - state.exerciseCalories);
-  const progress = state.calories ? Math.min(consumedCalories / state.calories, 1) : 0;
+  const remainingCalories =
+    state.calories - state.foodCalories + state.exerciseCalories;
+  const consumedCalories = Math.max(
+    0,
+    state.foodCalories - state.exerciseCalories,
+  );
+  const progress = state.calories
+    ? Math.min(consumedCalories / state.calories, 1)
+    : 0;
   const progressDegrees = `${Math.round(progress * 360)}deg`;
 
   elements.remainingCalories.textContent = remainingCalories;
@@ -115,7 +135,9 @@ function getTodayKey() {
 
 async function loadFoodCaloriesFromDiary(elements) {
   try {
-    const response = await fetch(`/api/diary?date=${encodeURIComponent(getTodayKey())}`);
+    const response = await fetch(
+      `/api/diary?date=${encodeURIComponent(getTodayKey())}`,
+    );
     if (!response.ok) throw new Error("Diary API failed.");
 
     const data = await response.json();

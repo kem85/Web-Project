@@ -10,7 +10,7 @@
         age: "{{ age }}",
         height: "{{ height }}",
         weight: "{{ weight }}",
-        gender: "{{ gender }}"
+        gender: "{{ gender }}",
       };
     </script>
     <link rel="stylesheet" href="/Food-Diary/Food-Diary.css" />
@@ -123,11 +123,26 @@
         </tfoot>
       </table>
 
-      <div class="food-search-modal hidden" id="foodSearchModal" role="dialog" aria-modal="true" aria-labelledby="foodSearchTitle">
+      <div
+        class="food-search-modal hidden"
+        id="foodSearchModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="foodSearchTitle"
+      >
         <div class="food-search-box">
-          <button class="modal-close" type="button" aria-label="Close food search">×</button>
+          <button
+            class="modal-close"
+            type="button"
+            aria-label="Close food search"
+          >
+            ×
+          </button>
           <h2 id="foodSearchTitle">Add Food</h2>
-          <p class="modal-meal-label">Choose a food to add to <strong id="activeMealName">Breakfast</strong>.</p>
+          <p class="modal-meal-label">
+            Choose a food to add to
+            <strong id="activeMealName">Breakfast</strong>.
+          </p>
 
           <form class="food-search-form" id="foodSearchForm">
             <input

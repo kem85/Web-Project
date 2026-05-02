@@ -45,3 +45,13 @@ CREATE TABLE charts_report (
     date_added DATE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+-- Table to store daily diary logs as JSON
+CREATE TABLE IF NOT EXISTS diary_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    date DATE,
+    diary_data JSON,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id, date)
+);

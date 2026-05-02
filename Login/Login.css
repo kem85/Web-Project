@@ -1,224 +1,224 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
 .login-container {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
 
 /* --- Hero Section --- */
 .hero-side {
-    flex: 2.3;
-    background: #0066ee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
+  flex: 2.3;
+  background: #0066ee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 .logo-content {
-    text-align:center;
+  text-align: center;
 }
 
 .hero-icon {
-    width: 140px;
-    height: auto;
-    margin-bottom: 0px;
+  width: 140px;
+  height: auto;
+  margin-bottom: 0px;
 }
 
 .hero-side h1 {
-    font-size: 3.5rem;
-    font-weight: 500;
-    letter-spacing: -2px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 3.5rem;
+  font-weight: 500;
+  letter-spacing: -2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Form Section --- */
 .form-side {
-    flex: 1;
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
+  flex: 1;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
 }
 
 .form-wrapper {
-    width: 100%;
-    max-width: 440px;
+  width: 100%;
+  max-width: 440px;
 }
 
 h2 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-bottom: 25px;
-    color: #1a1a1a;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #1a1a1a;
 }
 
 /* --- Input Styling --- */
 .input-group {
-    background-color: #f0f3f8;
-    border-radius: 10px;
-    padding: 10px 16px;
-    margin-bottom: 15px;
+  background-color: #f0f3f8;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 15px;
 }
 
 .input-group label {
-    display: block;
-    font-size: 12px;
-    color: #6a737d;
-    margin-bottom: 2px;
+  display: block;
+  font-size: 12px;
+  color: #6a737d;
+  margin-bottom: 2px;
 }
 
 /* Wrapper to hold input + eye on same line */
 .password-wrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .input-group input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 16px;
-    outline: none;
-    color: #24292e;
-    padding: 4px 0;
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+  color: #24292e;
+  padding: 4px 0;
 }
 
 /* Centered Toggle Eye */
 .toggle-password {
-    color: #6a737d;
-    cursor: pointer;
-    font-size: 18px;
-    padding-left: 10px;
-    padding-bottom: 8px;
+  color: #6a737d;
+  cursor: pointer;
+  font-size: 18px;
+  padding-left: 10px;
+  padding-bottom: 8px;
 }
 
 .forgot-container {
-    text-align: right;
-    margin-bottom: 25px;
+  text-align: right;
+  margin-bottom: 25px;
 }
 
 .forgot-link {
-    color: #0066ee;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
+  color: #0066ee;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* --- Captcha / Cloudflare Mockup --- */
 .captcha-box {
-    border: 1px solid #e1e4e8;
-    border-radius: 4px;
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    background: #fff;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  background: #fff;
 }
 
 .captcha-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .success-circle {
-    background: #28a745;
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
+  background: #28a745;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
 }
 
 .captcha-links {
-    font-size: 10px;
-    color: #6a737d;
-    text-align: right;
+  font-size: 10px;
+  color: #6a737d;
+  text-align: right;
 }
 
 /* --- Buttons --- */
 .btn-login {
-    width: 100%;
-    padding: 14px;
-    background-color: #0066ee;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 20px;
+  width: 100%;
+  padding: 14px;
+  background-color: #0066ee;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .divider {
-    text-align: center;
-    border-bottom: 1px solid #e1e4e8;
-    line-height: 0.1em;
-    margin: 30px 0;
+  text-align: center;
+  border-bottom: 1px solid #e1e4e8;
+  line-height: 0.1em;
+  margin: 30px 0;
 }
 
 .divider-text {
-    background: #fff;
-    padding: 0 15px;
-    color: #959da5;
-    font-size: 14px;
+  background: #fff;
+  padding: 0 15px;
+  color: #959da5;
+  font-size: 14px;
 }
 
 .btn-social {
-    width: 100%;
-    padding: 12px;
-    background: white;
-    border: 1px solid #d1d5da;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    font-weight: bold;
-    font-size: 15px;
-    cursor: pointer;
+  width: 100%;
+  padding: 12px;
+  background: white;
+  border: 1px solid #d1d5da;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .facebook-icon {
-    color: #1877F2;
-    font-size: 22px;
+  color: #1877f2;
+  font-size: 22px;
 }
 
 .footer-text {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 14px;
-    color: grey;
+  text-align: center;
+  margin-top: 30px;
+  font-size: 14px;
+  color: grey;
 }
 
 .footer-text a {
-    color: #0066ee;
-    text-decoration: none;
-    font-weight: 400;
+  color: #0066ee;
+  text-decoration: none;
+  font-weight: 400;
 }
 
 /* --- Responsive Layout --- */
 @media (max-width: 800px) {
-    .login-container {
-        flex-direction: column;
-    }
-    .hero-side {
-        padding: 60px 20px;
-        flex: none;
-    }
-    .hero-side h1 {
-        font-size: 2.5rem;
-    }
+  .login-container {
+    flex-direction: column;
+  }
+  .hero-side {
+    padding: 60px 20px;
+    flex: none;
+  }
+  .hero-side h1 {
+    font-size: 2.5rem;
+  }
 }

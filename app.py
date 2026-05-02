@@ -1,629 +1,743 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    jsonify,
+)
 from datetime import date, timedelta
 import requests
+from functools import wraps
 from Backend.db_connection import get_db_connection
 
-app = Flask(__name__, 
-            template_folder='.', 
-            static_folder='.', 
-            static_url_path='')
+# Initialize the Flask application
+app = Flask(__name__, template_folder=".", static_folder=".", static_url_path="")
 
-app.secret_key = 'dev_key_for_myfitnesspal'
-# Ensures the session doesn't disappear when the browser closes
+# Secret key required for secure session management
+app.secret_key = "dev_key_for_myfitnesspal"
+
+# Extend session lifetime to 31 days
 app.permanent_session_lifetime = timedelta(days=31)
 
+import json
 
-# In-memory diary data used to connect Food Diary with Home without browser storage.
-# It resets when Flask restarts, but it works across pages during the running session.
-DIARY_ENTRIES = {}
+# --- CONFIG & DATABASE DIARY ---
 MEALS = ["Breakfast", "Lunch", "Dinner", "Snacks"]
 NUTRIENT_KEYS = ["calories", "carbs", "fat", "protein", "sodium", "sugar"]
 
-
-def _safe_float(value, default=0):
+def _init_db():
     try:
-        if value in (None, "", "N/A"):
-            return default
-        return float(value)
-    except (TypeError, ValueError):
-        return default
+        conn = get_db_connection()
+        if not conn:
+            return
+        cursor = conn.cursor()
+        
+        # Ensure the json storage table exists
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS diary_logs (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT,
+                date DATE,
+                diary_data JSON,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                UNIQUE(user_id, date)
+            )
+        """)
+        
+        # Safely attempt to add unique constraints for upserts if they don't exist yet
+        try:
+            cursor.execute("ALTER TABLE food_entries ADD UNIQUE KEY unique_user_date (user_id, date_added)")
+        except:
+            pass
+            
+        try:
+            cursor.execute("ALTER TABLE charts_report ADD UNIQUE KEY unique_user_date_chart (user_id, date_added)")
+        except:
+            pass
 
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"DB Init Error: {e}")
 
-def _bounded_float(value, default, minimum, maximum):
-    number = _safe_float(value, default)
-    if number < minimum or number > maximum:
-        return default
-    return number
+# Run database initialization once on startup
+_init_db()
 
-
-def _calculate_calorie_goal():
-    # Keep impossible/corrupted session values from creating crazy goals like 6000+ calories.
-    weight = _bounded_float(session.get('weight'), 70, 30, 250)
-    height = _bounded_float(session.get('height'), 170, 100, 230)
-    age = _bounded_float(session.get('age'), 25, 10, 100)
-    gender = str(session.get('gender', 'male')).lower()
-
-    bmr = 10 * weight + 6.25 * height - 5 * age
-    bmr += -161 if gender in ("female", "woman") else 5
-    return round(bmr)
-
-
-def _daily_goals():
-    calories = _calculate_calorie_goal()
-    return {
-        "calories": calories,
-        "carbs": round((calories * 0.50) / 4),
-        "fat": round((calories * 0.30) / 9),
-        "protein": round((calories * 0.20) / 4),
-        "sodium": 2300,
-        "sugar": 80,
-    }
-
-
-def _entry_key(date_key):
-    user_key = str(session.get('user_id', 'guest'))
-    return f"{user_key}:{date_key}"
-
-
-def _today_key():
-    return date.today().isoformat()
-
-
-def _parse_date_key(date_key):
-    try:
-        return date.fromisoformat(str(date_key))
-    except (TypeError, ValueError):
-        return date.today()
-
-
-def _empty_meals():
-    return {meal: [] for meal in MEALS}
-
-
-def _empty_diary_entry():
-    return {
-        "meals": _empty_meals(),
+def _get_diary_entry(date_key):
+    user_id = session.get("user_id")
+    default_entry = {
+        "meals": {m: [] for m in MEALS},
         "waterCups": 0,
         "notes": "",
         "completed": False,
     }
+    
+    if not user_id:
+        return default_entry
+
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return default_entry
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT diary_data FROM diary_logs WHERE user_id=%s AND date=%s", (user_id, date_key))
+        row = cursor.fetchone()
+        conn.close()
+
+        if row and row.get("diary_data"):
+            entry = json.loads(row["diary_data"]) if isinstance(row["diary_data"], str) else row["diary_data"]
+            for m in MEALS:
+                if m not in entry["meals"]:
+                    entry["meals"][m] = []
+            return entry
+    except Exception as e:
+        print(f"Error fetching diary entry: {e}")
+
+    return default_entry
 
 
-def _get_diary_entry(date_key):
-    key = _entry_key(date_key)
-    if key not in DIARY_ENTRIES:
-        DIARY_ENTRIES[key] = _empty_diary_entry()
+def _save_diary_entry(date_key, entry):
+    user_id = session.get("user_id")
+    if not user_id:
+        return
 
-    # Backward compatibility if an older server run stored only meals.
-    if "meals" not in DIARY_ENTRIES[key]:
-        DIARY_ENTRIES[key] = {
-            "meals": DIARY_ENTRIES[key],
-            "waterCups": 0,
-            "notes": "",
-            "completed": False,
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return
+        cursor = conn.cursor()
+        
+        # 1. Save complete JSON diary payload
+        diary_json = json.dumps(entry)
+        cursor.execute("""
+            INSERT INTO diary_logs (user_id, date, diary_data) 
+            VALUES (%s, %s, %s) 
+            ON DUPLICATE KEY UPDATE diary_data=VALUES(diary_data)
+        """, (user_id, date_key, diary_json))
+        
+        # 2. Sync daily macro totals into the food_entries registry
+        totals = {
+            k: sum(float(f.get(k, 0)) for m in entry["meals"].values() for f in m)
+            for k in NUTRIENT_KEYS
         }
+        cursor.execute("""
+            INSERT INTO food_entries (user_id, calories, carbs, fat, protein, sodium, sugar, date_added)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE 
+                calories=VALUES(calories), carbs=VALUES(carbs), 
+                fat=VALUES(fat), protein=VALUES(protein), 
+                sodium=VALUES(sodium), sugar=VALUES(sugar)
+        """, (
+            user_id, totals["calories"], totals["carbs"], 
+            totals["fat"], totals["protein"], totals["sodium"], totals["sugar"], date_key
+        ))
+        
+        # 3. Sync daily water and calories into charts_report
+        water_cups = float(entry.get("waterCups", 0))
+        cursor.execute("""
+            INSERT INTO charts_report (user_id, calories, water_intake, date_added)
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE calories=VALUES(calories), water_intake=VALUES(water_intake)
+        """, (user_id, totals["calories"], water_cups, date_key))
 
-    return DIARY_ENTRIES[key]
-
-
-def _is_diary_locked(date_key):
-    entry = _get_diary_entry(date_key)
-    # Only today's diary can be edited. Yesterday/past days and future days are read-only.
-    if _parse_date_key(date_key) != date.today():
-        return True
-    return bool(entry.get("completed"))
-
-
-def _lock_reason(date_key):
-    selected = _parse_date_key(date_key)
-    if selected < date.today():
-        return "This day has passed, so the entry is locked."
-    if selected > date.today():
-        return "Future diary entries are read-only until that day."
-    if _get_diary_entry(date_key).get("completed"):
-        return "This entry was completed and is now locked."
-    return ""
-
-
-def _normalize_server_food(food):
-    return {
-        "name": str(food.get("name", "Food"))[:120],
-        "servingSize": str(food.get("servingSize") or "Serving size not available")[:80],
-        "calories": _safe_float(food.get("calories"), 0),
-        "carbs": _safe_float(food.get("carbs"), 0),
-        "fat": _safe_float(food.get("fat"), 0),
-        "protein": _safe_float(food.get("protein"), 0),
-        "sodium": _safe_float(food.get("sodium"), 0),
-        "sugar": _safe_float(food.get("sugar"), 0),
-    }
-
-
-def _calculate_totals(meals):
-    totals = {key: 0 for key in NUTRIENT_KEYS}
-    for foods in meals.values():
-        for food in foods:
-            for key in NUTRIENT_KEYS:
-                totals[key] += _safe_float(food.get(key), 0)
-    return {key: round(value, 1) for key, value in totals.items()}
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error saving diary entry: {e}")
 
 
 def _diary_payload(date_key):
     entry = _get_diary_entry(date_key)
-    meals = entry["meals"]
-    locked = _is_diary_locked(date_key)
+
+    # Calculate nutrient totals by iterating through all foods across meals
+    totals = {
+        k: sum(float(f.get(k, 0)) for m in entry["meals"].values() for f in m)
+        for k in NUTRIENT_KEYS
+    }
+
+    # Set fallback defaults for missing session data
+    w = float(
+        session.get("weight") if session.get("weight") not in (None, "N/A") else 70
+    )
+    h = float(
+        session.get("height") if session.get("height") not in (None, "N/A") else 170
+    )
+    a = float(session.get("age") if session.get("age") not in (None, "N/A") else 25)
+    gender = str(session.get("gender", "male")).lower()
+
+    # Calculate BMR (Basal Metabolic Rate) using the Mifflin-St Jeor equation
+    bmr = round(
+        10 * w + 6.25 * h - 5 * a + (-161 if gender in ("female", "woman") else 5)
+    )
+
+    # Define macro goals based on BMR
+    goals = {
+        "calories": bmr,
+        "carbs": round(bmr * 0.5 / 4),  # 50% carbs
+        "fat": round(bmr * 0.3 / 9),  # 30% fat
+        "protein": round(bmr * 0.2 / 4),  # 20% protein
+        "sodium": 2300,
+        "sugar": 80,
+    }
+
+    today_iso = date.today().isoformat()
+    locked = False
+    lockReason = ""
+
+    if date_key != today_iso:
+        locked = True
+        lockReason = "You can only edit today's diary."
+    elif entry.get("completed"):
+        locked = True
+        lockReason = "This diary entry is completed and locked."
+
     return {
         "date": date_key,
-        "meals": meals,
-        "totals": _calculate_totals(meals),
-        "goals": _daily_goals(),
-        "waterCups": _safe_float(entry.get("waterCups"), 0),
+        "meals": entry["meals"],
+        "totals": totals,
+        "goals": goals,
+        "waterCups": float(entry.get("waterCups", 0)),
         "notes": entry.get("notes", ""),
         "completed": bool(entry.get("completed")),
         "locked": locked,
-        "lockReason": _lock_reason(date_key) if locked else "",
+        "lockReason": lockReason,
     }
 
-# --- THE AUTO-BRIDGE ---
+
 @app.context_processor
 def inject_user_data():
-    """Makes these variables available to EVERY HTML file automatically."""
-    return dict(
-        username=session.get('username', 'Guest'),
-        age=session.get('age', 'N/A'),
-        height=session.get('height', 'N/A'),
-        gender=session.get('gender', 'N/A'),
-        weight=session.get('weight', 'N/A'),
-        neck=session.get('neck', 'N/A'),
-        waist=session.get('waist', 'N/A'),
-        hips=session.get('hips', 'N/A')
-    )
-
-
-# --- FOOD API HELPERS ---
-def _to_number(value):
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return 0
-
-
-def _pick_nutrient(nutrients, names):
-    for name in names:
-        value = _to_number(nutrients.get(name))
-        if value > 0:
-            return value
-    return 0
-
-
-def _normalize_food_product(product):
-    nutrients = product.get('nutriments') or {}
-    name = (
-        product.get('product_name')
-        or product.get('generic_name')
-        or product.get('abbreviated_product_name')
-    )
-
-    if not name:
-        return None
-
-    calories = _pick_nutrient(nutrients, [
-        'energy-kcal_serving',
-        'energy-kcal_100g',
-        'energy-kcal',
-    ])
-
-    if not calories:
-        return None
-
-    used_serving_value = _to_number(nutrients.get('energy-kcal_serving')) > 0
-    serving_size = product.get('serving_size') or ('1 serving' if used_serving_value else '100 g')
-    brands = product.get('brands') or ''
-    brand = f" ({brands.split(',')[0]})" if brands else ''
-
+    # Automatically inject user session data into all templates context
     return {
-        'name': f'{name}{brand}',
-        'servingSize': serving_size,
-        'calories': round(calories),
-        'carbs': _pick_nutrient(nutrients, ['carbohydrates_serving', 'carbohydrates_100g', 'carbohydrates']),
-        'fat': _pick_nutrient(nutrients, ['fat_serving', 'fat_100g', 'fat']),
-        'protein': _pick_nutrient(nutrients, ['proteins_serving', 'proteins_100g', 'proteins']),
-        # Open Food Facts stores sodium in grams, so convert to milligrams for the table.
-        'sodium': round(_pick_nutrient(nutrients, ['sodium_serving', 'sodium_100g', 'sodium']) * 1000),
-        'sugar': _pick_nutrient(nutrients, ['sugars_serving', 'sugars_100g', 'sugars']),
+        k: session.get(k, "N/A" if k != "username" else "Guest")
+        for k in [
+            "username",
+            "age",
+            "height",
+            "gender",
+            "weight",
+            "neck",
+            "waist",
+            "hips",
+        ]
     }
 
 
-
-
-# A small offline fallback keeps the food search usable when the public API is
-# unreachable from the school/device network. The app still tries Open Food Facts first.
+# --- FOOD API ---
+# Fallback dataset for offline functionality or API failure
 FALLBACK_FOODS = [
-    {'name': 'Egg, boiled', 'servingSize': '1 large egg', 'calories': 78, 'carbs': 0.6, 'fat': 5.3, 'protein': 6.3, 'sodium': 62, 'sugar': 0.6},
-    {'name': 'Egg, fried', 'servingSize': '1 large egg', 'calories': 90, 'carbs': 0.4, 'fat': 7, 'protein': 6.3, 'sodium': 95, 'sugar': 0.4},
-    {'name': 'White rice, cooked', 'servingSize': '1 cup cooked', 'calories': 205, 'carbs': 45, 'fat': 0.4, 'protein': 4.3, 'sodium': 2, 'sugar': 0.1},
-    {'name': 'Brown rice, cooked', 'servingSize': '1 cup cooked', 'calories': 216, 'carbs': 45, 'fat': 1.8, 'protein': 5, 'sodium': 10, 'sugar': 0.7},
-    {'name': 'Chicken breast, cooked', 'servingSize': '100 g', 'calories': 165, 'carbs': 0, 'fat': 3.6, 'protein': 31, 'sodium': 74, 'sugar': 0},
-    {'name': 'Chicken thigh, cooked', 'servingSize': '100 g', 'calories': 209, 'carbs': 0, 'fat': 10.9, 'protein': 26, 'sodium': 82, 'sugar': 0},
-    {'name': 'Banana', 'servingSize': '1 medium', 'calories': 105, 'carbs': 27, 'fat': 0.4, 'protein': 1.3, 'sodium': 1, 'sugar': 14},
-    {'name': 'Apple', 'servingSize': '1 medium', 'calories': 95, 'carbs': 25, 'fat': 0.3, 'protein': 0.5, 'sodium': 2, 'sugar': 19},
-    {'name': 'Milk, whole', 'servingSize': '1 cup', 'calories': 149, 'carbs': 12, 'fat': 8, 'protein': 7.7, 'sodium': 105, 'sugar': 12},
-    {'name': 'Milk, low fat', 'servingSize': '1 cup', 'calories': 102, 'carbs': 12, 'fat': 2.4, 'protein': 8.2, 'sodium': 107, 'sugar': 12},
-    {'name': 'Bread, white', 'servingSize': '1 slice', 'calories': 80, 'carbs': 15, 'fat': 1, 'protein': 2.7, 'sodium': 150, 'sugar': 1.5},
-    {'name': 'Bread, whole wheat', 'servingSize': '1 slice', 'calories': 81, 'carbs': 14, 'fat': 1.1, 'protein': 4, 'sodium': 144, 'sugar': 1.6},
-    {'name': 'Oats', 'servingSize': '40 g dry', 'calories': 150, 'carbs': 27, 'fat': 3, 'protein': 5, 'sodium': 0, 'sugar': 1},
-    {'name': 'Pasta, cooked', 'servingSize': '1 cup cooked', 'calories': 200, 'carbs': 42, 'fat': 1.2, 'protein': 7, 'sodium': 1, 'sugar': 1.2},
-    {'name': 'Potato, baked', 'servingSize': '1 medium', 'calories': 161, 'carbs': 37, 'fat': 0.2, 'protein': 4.3, 'sodium': 17, 'sugar': 2},
-    {'name': 'Greek yogurt, plain', 'servingSize': '170 g', 'calories': 100, 'carbs': 6, 'fat': 0.7, 'protein': 17, 'sodium': 61, 'sugar': 5},
-    {'name': 'Tuna, canned in water', 'servingSize': '100 g', 'calories': 116, 'carbs': 0, 'fat': 1, 'protein': 26, 'sodium': 338, 'sugar': 0},
-    {'name': 'Salmon, cooked', 'servingSize': '100 g', 'calories': 206, 'carbs': 0, 'fat': 12, 'protein': 22, 'sodium': 59, 'sugar': 0},
-    {'name': 'Beef steak, cooked', 'servingSize': '100 g', 'calories': 271, 'carbs': 0, 'fat': 19, 'protein': 25, 'sodium': 58, 'sugar': 0},
-    {'name': 'Almonds', 'servingSize': '28 g', 'calories': 164, 'carbs': 6, 'fat': 14, 'protein': 6, 'sodium': 0, 'sugar': 1.2},
-    {'name': 'Peanut butter', 'servingSize': '2 tbsp', 'calories': 188, 'carbs': 6, 'fat': 16, 'protein': 8, 'sodium': 147, 'sugar': 3},
-    {'name': 'Orange', 'servingSize': '1 medium', 'calories': 62, 'carbs': 15, 'fat': 0.2, 'protein': 1.2, 'sodium': 0, 'sugar': 12},
-    {'name': 'Tomato', 'servingSize': '1 medium', 'calories': 22, 'carbs': 4.8, 'fat': 0.2, 'protein': 1.1, 'sodium': 6, 'sugar': 3.2},
-    {'name': 'Cucumber', 'servingSize': '100 g', 'calories': 15, 'carbs': 3.6, 'fat': 0.1, 'protein': 0.7, 'sodium': 2, 'sugar': 1.7},
-    {'name': 'Lentils, cooked', 'servingSize': '1 cup cooked', 'calories': 230, 'carbs': 40, 'fat': 0.8, 'protein': 18, 'sodium': 4, 'sugar': 3.6},
+    {
+        "name": "Egg, boiled",
+        "servingSize": "1 large egg",
+        "calories": 78,
+        "carbs": 0.6,
+        "fat": 5.3,
+        "protein": 6.3,
+        "sodium": 62,
+        "sugar": 0.6,
+    },
+    {
+        "name": "White rice, cooked",
+        "servingSize": "1 cup cooked",
+        "calories": 205,
+        "carbs": 45,
+        "fat": 0.4,
+        "protein": 4.3,
+        "sodium": 2,
+        "sugar": 0.1,
+    },
+    {
+        "name": "Chicken breast, cooked",
+        "servingSize": "100 g",
+        "calories": 165,
+        "carbs": 0,
+        "fat": 3.6,
+        "protein": 31,
+        "sodium": 74,
+        "sugar": 0,
+    },
+    {
+        "name": "Banana",
+        "servingSize": "1 medium",
+        "calories": 105,
+        "carbs": 27,
+        "fat": 0.4,
+        "protein": 1.3,
+        "sodium": 1,
+        "sugar": 14,
+    },
+    {
+        "name": "Apple",
+        "servingSize": "1 medium",
+        "calories": 95,
+        "carbs": 25,
+        "fat": 0.3,
+        "protein": 0.5,
+        "sodium": 2,
+        "sugar": 19,
+    },
 ]
 
 
-def _fallback_food_search(query):
-    query_words = [word for word in query.lower().split() if word]
-    if not query_words:
-        return []
-
-    matches = []
-    for food in FALLBACK_FOODS:
-        search_text = f"{food['name']} {food['servingSize']}".lower()
-        if all(word in search_text for word in query_words) or any(word in search_text for word in query_words):
-            matches.append(food)
-
-    return matches[:10]
-
-@app.route('/api/food-search')
+@app.route("/api/food-search")
 def food_search():
-    query = request.args.get('q', '').strip()
+    # Parse search query
+    query = request.args.get("q", "").strip().lower()
 
-    if len(query) < 2:
-        return jsonify({'foods': [], 'message': 'Please enter at least 2 characters.'})
-
-    fallback_foods = _fallback_food_search(query)
+    # Filter local fallback matches
+    matches = [
+        f for f in FALLBACK_FOODS if all(w in f["name"].lower() for w in query.split())
+    ][:10]
 
     try:
-        response = requests.get(
-            'https://world.openfoodfacts.org/api/v2/search',
+        # Query Open Food Facts API for external nutrition data
+        res = requests.get(
+            "https://world.openfoodfacts.org/api/v2/search",
             params={
-                'search_terms': query,
-                'fields': 'product_name,generic_name,abbreviated_product_name,brands,serving_size,nutriments',
-                'page_size': 20,
-                'sort_by': 'unique_scans_n',
+                "search_terms": query,
+                "fields": "product_name,generic_name,brands,serving_size,nutriments",
+                "page_size": 20,
             },
-            headers={
-                'User-Agent': 'FitnessTrackerVY/1.0 (student-project; contact: local)'
-            },
-            timeout=8,
+            timeout=5,
         )
-        response.raise_for_status()
 
-        products = response.json().get('products', [])
         foods = []
-        seen_names = set()
-
-        for product in products:
-            food = _normalize_food_product(product)
-            if not food:
+        for p in res.json().get("products", []):
+            name = p.get("product_name") or p.get("generic_name")
+            if not name:
                 continue
 
-            key = food['name'].lower()
-            if key in seen_names:
-                continue
+            nut = p.get("nutriments", {})
+            # Normalize external API fields to internal structure
+            foods.append(
+                {
+                    "name": (
+                        f"{name} ({p.get('brands', '').split(',')[0]})"
+                        if p.get("brands")
+                        else name
+                    ),
+                    "servingSize": p.get("serving_size", "100 g"),
+                    "calories": float(nut.get("energy-kcal_100g", 0)),
+                    "carbs": float(nut.get("carbohydrates_100g", 0)),
+                    "fat": float(nut.get("fat_100g", 0)),
+                    "protein": float(nut.get("proteins_100g", 0)),
+                    "sodium": float(nut.get("sodium_100g", 0)) * 1000,
+                    "sugar": float(nut.get("sugars_100g", 0)),
+                }
+            )
 
-            seen_names.add(key)
-            foods.append(food)
+        # Combine API and fallback results
+        return jsonify({"foods": (foods + matches)[:10], "source": "openfoodfacts"})
 
-        # If the public API gives weak/empty results for generic searches like
-        # "rice", add our common-food fallback after the online results.
-        for food in fallback_foods:
-            key = food['name'].lower()
-            if key not in seen_names:
-                foods.append(food)
-                seen_names.add(key)
-
-        return jsonify({'foods': foods[:10], 'source': 'openfoodfacts'})
-
-    except requests.RequestException:
-        # Do not return a 502 to the frontend. Return useful fallback results so
-        # the Add Food modal still works when Open Food Facts is blocked/offline.
-        return jsonify({
-            'foods': fallback_foods,
-            'source': 'fallback',
-            'message': 'Online food API is unavailable, showing common foods instead.',
-        })
+    except:
+        # Return local matches as fallback on request failure
+        return jsonify({"foods": matches, "source": "fallback"})
 
 
-@app.route('/api/diary')
+# --- DIARY ENDPOINTS ---
+@app.route("/api/diary", methods=["GET"])
 def api_get_diary():
-    date_key = request.args.get('date') or _today_key()
+    # Return serialized diary payload for specified date
+    date_key = request.args.get("date", date.today().isoformat())
     return jsonify(_diary_payload(date_key))
 
 
-@app.route('/api/diary/add', methods=['POST'])
+@app.route("/api/diary/add", methods=["POST"])
 def api_add_diary_food():
-    data = request.get_json(silent=True) or {}
-    date_key = data.get('date') or _today_key()
-    meal = data.get('meal')
-    food = data.get('food') or {}
-
-    if meal not in MEALS:
-        return jsonify({"error": "Invalid meal."}), 400
-
-    if _is_diary_locked(date_key):
-        return jsonify({"error": _lock_reason(date_key) or "This diary entry is locked.", "locked": True}), 423
-
-    normalized_food = _normalize_server_food(food)
-    if not normalized_food["name"] or normalized_food["calories"] <= 0:
-        return jsonify({"error": "Invalid food data."}), 400
+    # Append new food item to the requested meal
+    data = request.get_json()
+    date_key = data.get("date")
+    meal = data.get("meal")
+    food = data.get("food")
 
     entry = _get_diary_entry(date_key)
-    entry["meals"][meal].append(normalized_food)
+    entry["meals"][meal].append(food)
+    _save_diary_entry(date_key, entry)
+
     return jsonify(_diary_payload(date_key))
 
 
-@app.route('/api/diary/remove', methods=['POST'])
+@app.route("/api/diary/remove", methods=["POST"])
 def api_remove_diary_food():
-    data = request.get_json(silent=True) or {}
-    date_key = data.get('date') or _today_key()
-    meal = data.get('meal')
-    index = data.get('index')
+    # Remove food item by index from the requested meal
+    data = request.get_json()
+    date_key = data.get("date")
+    meal = data.get("meal")
+    index = int(data.get("index"))
 
-    if meal not in MEALS:
-        return jsonify({"error": "Invalid meal."}), 400
-
-    if _is_diary_locked(date_key):
-        return jsonify({"error": _lock_reason(date_key) or "This diary entry is locked.", "locked": True}), 423
-
-    try:
-        index = int(index)
-        entry = _get_diary_entry(date_key)
-        meals = entry["meals"]
-        if 0 <= index < len(meals[meal]):
-            meals[meal].pop(index)
-    except (TypeError, ValueError):
-        return jsonify({"error": "Invalid food index."}), 400
+    entry = _get_diary_entry(date_key)
+    entry["meals"][meal].pop(index)
+    _save_diary_entry(date_key, entry)
 
     return jsonify(_diary_payload(date_key))
 
 
-@app.route('/api/diary/water', methods=['POST'])
+@app.route("/api/diary/water", methods=["POST"])
 def api_update_diary_water():
-    data = request.get_json(silent=True) or {}
-    date_key = data.get('date') or _today_key()
-
-    if _is_diary_locked(date_key):
-        return jsonify({"error": _lock_reason(date_key) or "This diary entry is locked.", "locked": True}), 423
+    # Process water cup increments or resets
+    data = request.get_json()
+    date_key = data.get("date")
 
     entry = _get_diary_entry(date_key)
-    action = data.get('action')
 
-    if action == 'reset':
-        entry['waterCups'] = 0
+    if data.get("action") == "reset":
+        entry["waterCups"] = 0
     else:
-        amount = _safe_float(data.get('cups'), 0)
-        if amount <= 0:
-            return jsonify({"error": "Invalid water amount."}), 400
-        entry['waterCups'] = max(0, _safe_float(entry.get('waterCups'), 0) + amount)
+        entry["waterCups"] = float(entry.get("waterCups", 0)) + float(
+            data.get("cups", 0)
+        )
+    _save_diary_entry(date_key, entry)
 
     return jsonify(_diary_payload(date_key))
 
 
-@app.route('/api/diary/notes', methods=['POST'])
+@app.route("/api/diary/notes", methods=["POST"])
 def api_update_diary_notes():
-    data = request.get_json(silent=True) or {}
-    date_key = data.get('date') or _today_key()
-
-    if _is_diary_locked(date_key):
-        return jsonify({"error": _lock_reason(date_key) or "This diary entry is locked.", "locked": True}), 423
+    data = request.get_json()
+    date_key = data.get("date")
 
     entry = _get_diary_entry(date_key)
-    entry['notes'] = str(data.get('notes') or '')[:2000]
+    entry["notes"] = data.get("notes", "")
+    _save_diary_entry(date_key, entry)
+
     return jsonify(_diary_payload(date_key))
 
 
-@app.route('/api/diary/complete', methods=['POST'])
+@app.route("/api/diary/complete", methods=["POST"])
 def api_complete_diary():
-    data = request.get_json(silent=True) or {}
-    date_key = data.get('date') or _today_key()
-
-    if _parse_date_key(date_key) != date.today():
-        return jsonify({"error": _lock_reason(date_key) or "Only today's entry can be completed.", "locked": True}), 423
+    # Flag the diary entry as completed
+    date_key = request.get_json().get("date")
 
     entry = _get_diary_entry(date_key)
-    entry['completed'] = True
+    entry["completed"] = True
+    _save_diary_entry(date_key, entry)
+
+    return jsonify(_diary_payload(date_key))
+
+@app.route("/api/diary/unlock", methods=["POST"])
+def api_unlock_diary():
+    # Flag the diary entry as not completed, allowing edits again (only for today)
+    date_key = request.get_json().get("date")
+
+    today_iso = date.today().isoformat()
+    if date_key != today_iso:
+        return jsonify({"error": "You can only edit today's diary."}), 400
+
+    entry = _get_diary_entry(date_key)
+    entry["completed"] = False
+    _save_diary_entry(date_key, entry)
+
     return jsonify(_diary_payload(date_key))
 
 
-# --- ROUTES ---
+# --- APP ROUTES ---
+def login_required(f):
+    # Decorator to require authentication for protected routes
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if "user_id" not in session:
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
 
-@app.route('/')
+    return decorated
+
+
+@app.route("/")
+@login_required
 def index():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    return render_template('index/index.html')
+    return render_template("index/index.html")
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-
+    if request.method == "POST":
+        # Handle authentication against database
         conn = get_db_connection()
+        if not conn:
+            flash("Database connection failed. Ensure MySQL is running.")
+            return render_template("Login/Login.html")
+            
         cursor = conn.cursor(dictionary=True)
-        # Note: In production, use hashed passwords!
-        cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email, password))
+
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        cursor.execute(
+            "SELECT * FROM users WHERE email=%s AND password=%s", (email, password)
+        )
         user = cursor.fetchone()
-        cursor.close()
         conn.close()
 
         if user:
+            # Cache user data in session cookie to minimize DB queries
+            session.update(
+                {
+                    "user_id": user["id"],
+                    "username": user["username"],
+                    "age": user["age"],
+                    "height": user["height"],
+                    "gender": user["gender"],
+                    "weight": user.get("current_weight", "N/A"),
+                    "neck": user.get("neck_entry", "N/A"),
+                    "waist": user.get("waist_entry", "N/A"),
+                    "hips": user.get("hips_entry", "N/A"),
+                }
+            )
             session.permanent = True
-            session['user_id'] = user['id']
-            session['username'] = user['username']
-            session['age'] = user['age']
-            session['height'] = user['height']
-            session['gender'] = user['gender']
-            session['weight'] = user.get('current_weight', 'N/A')
-            session['neck'] = user.get('neck_entry', 'N/A')
-            session['waist'] = user.get('waist_entry', 'N/A')
-            session['hips'] = user.get('hips_entry', 'N/A')
-            return redirect(url_for('index'))
-        else:
-            flash("Invalid credentials")
-            return redirect(url_for('login'))
+            return redirect(url_for("index"))
 
-    return render_template('Login/Login.html')
+        flash("Invalid credentials")
 
-@app.route('/signup', methods=['GET', 'POST'])
+    return render_template("Login/Login.html")
+
+
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        age = request.form.get('age')
-        height = request.form.get('height')
-        gender = request.form.get('gender')
-
+    if request.method == "POST":
+        # Handle new user registration
         conn = get_db_connection()
-        if conn:
-            cursor = conn.cursor(dictionary=True)
-            try:
-                query = """INSERT INTO users (username, email, password, age, height, gender) 
-                           VALUES (%s, %s, %s, %s, %s, %s)"""
-                cursor.execute(query, (username, email, password, age, height, gender))
-                conn.commit()
-                
-                # Log them in automatically after signup
-                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-                new_user = cursor.fetchone()
-                
-                if new_user:
-                    session.permanent = True
-                    session['user_id'] = new_user['id']
-                    session['username'] = new_user['username']
-                    session['age'] = new_user['age']
-                    session['height'] = new_user['height']
-                    session['gender'] = new_user['gender']
-                    session['weight'] = 'N/A'
-                
-                return redirect(url_for('index'))
-            except Exception as e:
-                print(f"Signup Error: {e}")
-                flash("Signup failed. Email might already exist.")
-                return redirect(url_for('signup'))
-            finally:
-                cursor.close()
-                conn.close()
+        if not conn:
+            flash("Database connection failed. Ensure MySQL is running.")
+            return render_template("Register/Register.html")
+            
+        cursor = conn.cursor(dictionary=True)
 
-    return render_template('Register/Register.html')
+        username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        age = request.form.get("age")
+        height = request.form.get("height")
+        gender = request.form.get("gender")
 
-@app.route('/check_in', methods=['GET', 'POST'])
+        # Insert new user record (Note: plaintext password used for simplicity)
+        cursor.execute(
+            "INSERT INTO users (username, email, password, age, height, gender) VALUES (%s, %s, %s, %s, %s, %s)",
+            (username, email, password, age, height, gender),
+        )
+        conn.commit()
+
+        # Auto-login newly created user
+        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+        user = cursor.fetchone()
+        conn.close()
+
+        session.update(
+            {
+                "user_id": user["id"],
+                "username": user["username"],
+                "age": user["age"],
+                "height": user["height"],
+                "gender": user["gender"],
+                "weight": "N/A",
+            }
+        )
+        session.permanent = True
+
+        return redirect(url_for("index"))
+
+    return render_template("Register/Register.html")
+
+
+@app.route("/check_in", methods=["GET", "POST"])
+@login_required
 def check_in():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        weight = request.form.get('weight')
-        steps = request.form.get('steps')
-        neck = request.form.get('neck')
-        waist = request.form.get('waist')
-        hips = request.form.get('hips')
-
-        weight_value = _safe_float(weight, None)
-        if weight_value is None or weight_value < 30 or weight_value > 250:
-            flash("Please enter a realistic weight between 30 and 250 kg.")
-            return redirect(url_for('check_in'))
-        user_id = session['user_id']
-        today = date.today()
-
+    if request.method == "POST":
+        # Process user metric updates
         conn = get_db_connection()
-        if conn:
-            cursor = conn.cursor(dictionary=True)
-            try:
-                # 1. Update the Users Table
-                user_query = """
-                    UPDATE users 
-                    SET current_weight = %s,
-                        neck_entry = IF(%s = '' OR %s IS NULL, neck_entry, %s),
-                        waist_entry = IF(%s = '' OR %s IS NULL, waist_entry, %s),
-                        hips_entry = IF(%s = '' OR %s IS NULL, hips_entry, %s)
-                    WHERE id = %s
-                """
-                cursor.execute(user_query, (weight, neck, neck, neck, waist, waist, waist, hips, hips, hips, user_id))
+        cursor = conn.cursor()
 
-                # 2. Update the Charts Report (Upsert logic)
-                report_query = """
-                    INSERT INTO charts_report (user_id, weight, steps, date_added)
-                    VALUES (%s, %s, %s, %s)
-                    ON DUPLICATE KEY UPDATE 
-                        weight = VALUES(weight),
-                        steps = VALUES(steps)
-                """
-                cursor.execute(report_query, (user_id, weight, steps, today))
-                
-                conn.commit()
+        weight = request.form.get("weight")
+        neck = request.form.get("neck")
+        waist = request.form.get("waist")
+        hips = request.form.get("hips")
+        steps = request.form.get("steps")
 
-                # 3. SYNC SESSION: This ensures the UI updates without logging out
-                session['weight'] = weight
-                if neck: session['neck'] = neck
-                if waist: session['waist'] = waist
-                if hips: session['hips'] = hips
+        # Use COALESCE/NULLIF to preserve existing values if fields are submitted blank
+        cursor.execute(
+            "UPDATE users SET current_weight=%s, neck_entry=COALESCE(NULLIF(%s,''), neck_entry), waist_entry=COALESCE(NULLIF(%s,''), waist_entry), hips_entry=COALESCE(NULLIF(%s,''), hips_entry) WHERE id=%s",
+            (weight, neck, waist, hips, session["user_id"]),
+        )
 
-                flash("Progress saved successfully!")
-            except Exception as e:
-                conn.rollback()
-                print(f"Database Error: {e}")
-                flash("An error occurred while saving.")
-            finally:
-                cursor.close()
-                conn.close()
+        # Upsert progress data into charts report
+        cursor.execute(
+            "INSERT INTO charts_report (user_id, weight, steps, date_added) VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE weight=VALUES(weight), steps=VALUES(steps)",
+            (session["user_id"], weight, steps, date.today()),
+        )
 
-        return redirect(url_for('check_in'))
+        conn.commit()
+        conn.close()
 
-    return render_template('Check-In/Check-In.html')
+        # Sync updated metrics back to session cache
+        session.update(
+            {
+                k: request.form.get(k)
+                for k in ["weight", "neck", "waist", "hips"]
+                if request.form.get(k)
+            }
+        )
 
-@app.route('/food_diary', methods=['GET', 'POST'])
+        flash("Progress saved!")
+        return redirect(url_for("check_in"))
+
+    return render_template("Check-In/Check-In.html")
+
+
+@app.route("/food_diary", methods=["GET", "POST"])
+@login_required
 def food_diary():
-    if request.method == 'POST':
-        calories = request.form.get('calories')
-        carbs = request.form.get('carbs')
-        fat = request.form.get('fat')
-        protein = request.form.get('protein')
-        sodium = request.form.get('sodium')
-        sugar = request.form.get('sugar')
-        entry_date = request.form.get('date')
-        user_id = session['user_id']
-    else:
-        target_date = request.args.get('date')
-        if not target_date:
-            target_date = date.today().strftime('%Y-%m-%d')
-        print(f"Retrieving diary entries for user {session['user_id']} on {target_date}")
+    current_date = request.args.get("date", date.today().strftime("%Y-%m-%d"))
+    return render_template("Food-Diary/Food-Diary.html", current_date=current_date)
 
-    return render_template('Food-Diary/Food-Diary.html', current_date=target_date)
 
-@app.route('/charts')
+@app.route("/api/charts/data")
+@login_required
+def api_charts_data():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify([])
+
+    cursor = conn.cursor(dictionary=True)
+    user_id = session["user_id"]
+
+    cursor.execute("""
+        SELECT date_added as date, weight, steps, calories, water_intake as water 
+        FROM charts_report 
+        WHERE user_id = %s 
+        ORDER BY date_added ASC
+    """, (user_id,))
+    
+    rows = cursor.fetchall()
+    conn.close()
+
+    # Format dates as ISO strings
+    for row in rows:
+        if row["date"]:
+            row["date"] = row["date"].isoformat()
+
+    return jsonify(rows)
+
+@app.route("/charts")
+@login_required
 def charts():
-    return render_template('Charts/Charts.html') if 'user_id' in session else redirect(url_for('login'))
+    return render_template("Charts/Charts.html")
 
-@app.route('/profile')
+
+@app.route("/profile")
+@login_required
 def profile():
-    return render_template('Profile/Profile.html') if 'user_id' in session else redirect(url_for('login'))
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id=%s", (session["user_id"],))
+    user = cursor.fetchone()
+    conn.close()
+    return render_template("Profile/Profile.html", user=user)
 
-@app.route('/settings')
+
+@app.route("/settings", methods=["GET", "POST"])
+@login_required
 def settings():
-    return render_template('Settings/Settings.html') if 'user_id' in session else redirect(url_for('login'))
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
 
-@app.route('/logout')
+    if request.method == "POST":
+        username = request.form.get("username")
+        age = request.form.get("age")
+        gender = request.form.get("gender")
+        about_me = request.form.get("about_me", "")
+        motivation = request.form.get("motivation", "")
+        inspiration = request.form.get("inspiration", "")
+
+        cursor.execute(
+            """UPDATE users 
+               SET username=COALESCE(NULLIF(%s,''), username), 
+                   age=COALESCE(NULLIF(%s,''), age), 
+                   gender=COALESCE(NULLIF(%s,''), gender),
+                   about_me=NULLIF(%s,''),
+                   motivation=NULLIF(%s,''),
+                   inspiration=NULLIF(%s,'')
+               WHERE id=%s""",
+            (username, age, gender, about_me, motivation, inspiration, session["user_id"]),
+        )
+        conn.commit()
+        session.update({k: request.form.get(k) for k in ["username", "age", "gender"] if request.form.get(k)})
+
+        flash("Profile saved successfully.")
+        return redirect(url_for("settings"))
+
+    cursor.execute("SELECT * FROM users WHERE id=%s", (session["user_id"],))
+    user = cursor.fetchone()
+    print(user)
+    conn.close()
+    return render_template("Settings/Settings.html", user=user)
+
+@app.route("/api/profile", methods=["GET", "POST"])
+@login_required
+def api_profile():
+    user_id = session["user_id"]
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Database connection failed"}), 500
+        
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "GET":
+        cursor.execute("""
+            SELECT username, age, gender, about_me, motivation, inspiration
+            FROM users WHERE id=%s
+        """, (user_id,))
+        user = cursor.fetchone()
+        
+        profile_state = {
+            "name": user["username"],
+            "age": user["age"],
+            "gender": user["gender"].capitalize() if user["gender"] else "Male",
+            "memberSince": "Recently Joined",
+            "aboutMe": user["about_me"] or "",
+            "whyShape": user["motivation"] or "",      
+            "inspirations": user["inspiration"] or "", 
+        }
+            
+        conn.close()
+        return jsonify(profile_state)
+
+    if request.method == "POST":
+        data = request.get_json()
+        
+        # Update your specific columns!
+        cursor.execute("""
+            UPDATE users 
+            SET username=COALESCE(NULLIF(%s,''), username), 
+                age=COALESCE(NULLIF(%s,''), age), 
+                gender=COALESCE(NULLIF(%s,''), gender), 
+                about_me=NULLIF(%s,''), motivation=NULLIF(%s,''), inspiration=NULLIF(%s,''),
+            WHERE id=%s
+        """, (
+            data.get("name"), 
+            data.get("age"), 
+            data.get("gender"), 
+            data.get("aboutMe", ""), 
+            data.get("whyShape", ""),      
+            data.get("inspirations", ""),  
+            user_id
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        session["username"] = data.get("name")
+        session["age"] = data.get("age")
+        session["gender"] = data.get("gender")
+        
+        return jsonify({"status": "success"})
+
+@app.route("/logout")
 def logout():
-    session.clear() 
-    return redirect(url_for('login'))
+    # Clear session data to terminate session
+    session.clear()
+    return redirect(url_for("login"))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)

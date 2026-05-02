@@ -1,6 +1,6 @@
 function createFooter() {
-    const footer = document.getElementsByClassName('main-footer')[0];
-    footer.innerHTML = `
+  const footer = document.getElementsByClassName("main-footer")[0];
+  footer.innerHTML = `
     <div class="footer-container">
         <nav class="footer-links">
             <a href="#">Calorie Counter</a>
@@ -24,6 +24,6 @@ function createFooter() {
     <div class="footer-copyright">
         © 2026 MyFitnessPal, Inc.
     </div>
-`
+`;
 }
 createFooter();

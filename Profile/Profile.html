@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Profile</title>
+    <!-- Jinja variable passed from Flask -->
     <script>
       window.dbUsername = "{{ username }}";
     </script>
@@ -16,37 +17,46 @@
     <header class="header"></header>
     <nav class="navbar"></nav>
     <div class="container">
-      <h1>Youssef's profile</h1>
+      <!-- JS will update this automatically -->
+      <h1>{{ user.username or 'Guest' }}'s Profile</h1>
 
       <div class="profile-card">
-        <img src="/Profile/muslim cat.jpg" class="profile-pic" />
+        <!-- JS will update this photo if the user uploads one -->
+        <img
+          src="/Profile/muslim cat.jpg"
+          class="profile-pic"
+          alt="Profile Picture"
+        />
 
         <div class="profile-info">
           <div class="information">
-            <h2>Youssef</h2>
-            <p>20 years old</p>
-            <p>Male</p>
-            <p>Member since June 9, 2024</p>
+            <!-- JS updates these fields -->
+            <h2>{{ user.username or '--' }}</h2>
+            <p>{{ user.age or '--' }} years old</p>
+            <p>{{ user.gender or '--' }}</p>
+            <p>Member since --</p>
           </div>
         </div>
       </div>
 
       <div class="sections">
-        <div class="left">
+        <!-- Width set to 100% since the right column was removed -->
+        <div class="left" style="width: 100%">
           <h3>About Me:</h3>
-          <p class="empty">I haven't filled this out yet.</p>
+          <p class="empty">{{ user.about_me or 'No about me provided.' }}</p>
 
           <h3>Why I want to get in shape:</h3>
-          <p class="empty">I haven't filled this out yet.</p>
+          <p class="empty">
+            {{ user.motivation or 'No motivation provided.' }}
+          </p>
 
           <h3>My Inspirations</h3>
-          <p class="empty">I haven't filled this out yet.</p>
+          <p class="empty">
+            {{ user.inspiration or 'No inspirations provided.' }}
+          </p>
         </div>
 
-        <div class="right">
-          <h3>Friends</h3>
-          <p class="empty">Youssef does not have any friends yet.</p>
-        </div>
+        <!-- The .right div with the Friends section has been completely deleted -->
       </div>
     </div>
 
@@ -54,7 +64,9 @@
     <script src="/Global/Header/header.js"></script>
     <script src="/Global/Navbar/navbar.js"></script>
     <script>
-      createNavFromProfile();
+      if (typeof createNavFromProfile === "function") {
+        createNavFromProfile();
+      }
     </script>
     <script src="/Global/Footer/footer.js"></script>
   </body>
