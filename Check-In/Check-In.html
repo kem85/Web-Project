@@ -46,6 +46,8 @@
               name="weight"
               type="number"
               step="0.1"
+              min="30"
+              max="250"
               placeholder="kg"
               required
             />
@@ -57,6 +59,8 @@
               id="stepsInput"
               name="steps"
               type="number"
+              min="0"
+              max="100000"
               placeholder="steps"
               required
             />
@@ -83,21 +87,21 @@
               <td>Neck</td>
               <td>{{ neck if neck and neck != 'N/A' else '--' }}</td>
               <td>
-                <input id="neckInput" name="neck" type="number" step="0.1" />
+                <input id="neckInput" name="neck" type="number" step="0.1" min="10" max="80" />
               </td>
             </tr>
             <tr>
               <td>Waist</td>
               <td>{{ waist if waist and waist != 'N/A' else '--' }}</td>
               <td>
-                <input id="waistInput" name="waist" type="number" step="0.1" />
+                <input id="waistInput" name="waist" type="number" step="0.1" min="30" max="250" />
               </td>
             </tr>
             <tr>
               <td>Hips</td>
               <td>{{ hips if hips and hips != 'N/A' else '--' }}</td>
               <td>
-                <input id="hipsInput" name="hips" type="number" step="0.1" />
+                <input id="hipsInput" name="hips" type="number" step="0.1" min="30" max="250" />
               </td>
             </tr>
           </tbody>
